@@ -1,0 +1,39 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}
+Portfolio
+{%endblock title%}
+{%block form %} {{form}} {%endblock form%}
+{% block content %}
+{{df|safe}}
+<div class="container-fluid">
+    {%if total > 0%}
+    <h2 class="text-center mb-4">Total investment: {{total|floatformat:"-2g"}} $</h2>
+    {%endif%}
+<ul class="list-group">
+    {%for instance in queryset%}
+        <li class="list-group-item mt-2"><strong>{{instance.name}}</strong> - {{ instance.total_price|floatformat:"-2g" }} $</li>
+        {% empty %}
+        <div class="jumbotron">
+            <h1 class="display-4">No data to display</h1>
+            <p class="lead">Click the Add in order to append a new item, thanks to that you will be able to see you portfolio</p>
+            <hr class="my-4">
+            <p>Investing in financial markets requires having knowledge about various financial markets, This site afford you to see for yourself how well is your portfolio diversed</p>
+            <p class="lead">
+              <a class="btn mt-2 btn-primary btn-lg" href="add/" role="button">Add</a>
+            </p>
+          </div>
+    {%endfor%}
+</ul>
+</div>
+
+<div class="container-fluid mt-5">
+  <form action="" method="POST">{%csrf_token%}
+      {{form_b|crispy}}
+      <button type="submit" class="btn btn-primary ">View</button>
+  </form>
+</div>
+<div class="container mt-5">
+  <img src="data:image/png;base64, {{chart|safe}}">
+</div>
+{% endblock content %}

@@ -1,0 +1,39 @@
+{%extends "base.html"%}
+{%load crispy_forms_tags%}
+{%block title%}
+Region
+{%endblock title%}
+{%block form %} {{form}} {%endblock form%}
+{%block content%}
+<div class="container-fluid">
+    <h2 class="text-center">Total investment: {{total|floatformat:"-2g"}} $</h2>
+
+    <ul class="list-group mt-4">
+        <li class="list-group-item"><strong>Independent money </strong>{{totals.0|floatformat:"-2g"}}$ - {{percentage.0}}</li>
+    </ul>
+    <ul class="list-group  mt-2">
+        <li class="list-group-item"><strong>Asia </strong>{{totals.1|floatformat:"-2g"}}$ - {{percentage.1}}</li>
+    </ul>
+    <ul class="list-group mt-2">
+        <li class="list-group-item"><strong>Russia </strong>{{totals.2|floatformat:"-2g"}}$ - {{percentage.2}}</li>
+    </ul>
+    <ul class="list-group  mt-2">
+        <li class="list-group-item"><strong>Europe </strong>{{totals.3|floatformat:"-2g"}}$ - {{percentage.3}}</li>
+    </ul>
+    <ul class="list-group  mt-2">
+        <li class="list-group-item"><strong>US </strong>{{totals.4|floatformat:"-2g"}}$ - {{percentage.4}}</li>
+    </ul>
+    <ul class="list-group  mt-2">
+        <li class="list-group-item"><strong>Africa </strong>{{totals.5|floatformat:"-2g"}}$ - {{percentage.5}}</li>
+    </ul>
+</div>
+<div class="container-fluid mt-5">
+    <form action="" method="POST">{%csrf_token%}
+        {{form_b|crispy}}
+        <button type="submit" class="btn btn-primary ">View</button>
+    </form>
+  </div>
+  <div class="container mt-5">
+    <img src="data:image/png;base64, {{chart|safe}}">
+  </div>
+{%endblock%}
