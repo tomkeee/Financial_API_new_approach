@@ -47,24 +47,23 @@ def portfolio_view(request):
         instance=prettify(instance)
         percentage.append(instance)
 
-    df=pd.DataFrame(queryset.values())
-    df.rename({'total_price':'invested',"name":'Ticker'},axis=1,inplace=True)
-    df.sort_values(by=['invested'],ascending=False, inplace=True)
-    chart=get_chart(chart_type, df,labels=df['Ticker'],y='invested',x='Ticker')
-
-    print(df)
-    df=df.to_html()
-
-
     context={
         "queryset":queryset,
         "total":total,
         "totals":totals,
         "percentage":percentage,
         "form":form,
-        "form_b":form_b,
-        "chart":chart
+        "form_b":form_b
         }
+        
+    if len(queryset)>0:
+        df=pd.DataFrame(queryset.values())
+        df.rename({'total_price':'invested',"name":'Ticker'},axis=1,inplace=True)
+        df.sort_values(by=['invested'],ascending=False, inplace=True)
+        chart=get_chart(chart_type, df,labels=df['Ticker'],y='invested',x='Ticker')
+        context['chart']=chart
+
+
     return render(request,"portfolio/portfolio.html",context)
 
 

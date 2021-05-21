@@ -27,6 +27,8 @@ Region
         <li class="list-group-item"><strong>Africa </strong>{{totals.5|floatformat:"-2g"}}$ - {{percentage.5}}</li>
     </ul>
 </div>
+{%if queryset%}
+
 <div class="container-fluid mt-5">
     <form action="" method="POST">{%csrf_token%}
         {{form_b|crispy}}
@@ -36,4 +38,5 @@ Region
   <div class="container mt-5">
     <img src="data:image/png;base64, {{chart|safe}}">
   </div>
+{%endif%}
 {%endblock%}
