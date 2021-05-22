@@ -2,37 +2,9 @@
 <html>
 <head>
     <style>
-        .sidenav{
-            height:100%;
-            width:250px;
-            position: fixed;
-            z-index: 1;
-            top:0;
-            left:0;
-            background-color: #86B7F5;
-            padding-top:20px;
-            overflow-x: hidden;
-        }
-        .sidenav a{
-            padding:6px 8px 6px 16px;
-            text-decoration: none;
-            color:black;
-            display: block;
-            font-size: 1.6em;
-        }
-
-        .sidenav a:hover{
-            color:#f1f1f1;
-        }
-
-        .main{
-            
-            margin-left: 40px;
-            padding:0px 10px;
-        }
-        .content{
-            background-color:#D6EDFF;
-        }
+              .asteriskField {
+        display: none;
+      }
     </style>
 
     <meta charset="utf-8">
@@ -45,11 +17,8 @@
 </head>
 <body class="content">
     <div id="content", name="content", class="main">
-        <div class="row justify-content-center">
-            <div class="col-8">
-                
-                <h1 class="mt-2">{%block intro%}My Site{%endblock%}</h1>
-                <hr class="mt-0 mb-4">
+        <div class="row justify-content-center mt-3">
+            <div class="col-3 mt-5">
                 {%block content%}
                 {%endblock%}
             </div>

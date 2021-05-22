@@ -10,7 +10,7 @@ User = get_user_model()
 
 def logout_view(request):
     logout(request)
-    return redirect('registraion/login')
+    return redirect('/login')
 
 def login_view(request):
     error_message=None

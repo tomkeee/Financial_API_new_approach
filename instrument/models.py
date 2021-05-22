@@ -21,10 +21,10 @@ STAKE_CATEGORY=(
         ('Cs','Cash'),
 )
 
-User=get_user_model()
 
+User=get_user_model()
 class Instrument(models.Model):
-    profile=models.ForeignKey(User,on_delete=CASCADE,blank=True)
+    profiles=models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     name=models.CharField(max_length=120)
     price=models.FloatField(default=0)
     quantity =models.PositiveIntegerField(default=0)

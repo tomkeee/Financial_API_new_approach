@@ -9,8 +9,8 @@ class TickerForm(forms.Form):
 class InstrumentForm(ModelForm):
     class Meta:
         model=Instrument
-        fields =['profile','name','price','quantity','region','stake']
-        exclude=['profile']
+        fields =['profiles','name','price','quantity','region','stake']
+        exclude=['profiles']
         widgets={
             'name':forms.TextInput(attrs={'class':'form-control mb-4'}),
             'price': forms.NumberInput(attrs={'class':'form-control mb-4'}),
