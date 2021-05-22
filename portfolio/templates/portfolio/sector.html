@@ -23,7 +23,7 @@ Sector
         <li class="list-group-item"><strong>Equity </strong>{{totals.4|floatformat:"-2g"}}$ - {{percentage.4}}</li>
     </ul>
 </div>
-{%if queryset%}
+{%if total > 0 %}
 <div class="container-fluid mt-5">
     <form action="" method="POST">{%csrf_token%}
         {{form_b|crispy}}

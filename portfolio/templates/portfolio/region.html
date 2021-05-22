@@ -27,7 +27,8 @@ Region
         <li class="list-group-item"><strong>Africa </strong>{{totals.5|floatformat:"-2g"}}$ - {{percentage.5}}</li>
     </ul>
 </div>
-{%if queryset%}
+{%if total > 0 %}
+
 
 <div class="container-fluid mt-5">
     <form action="" method="POST">{%csrf_token%}

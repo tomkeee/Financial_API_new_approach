@@ -2,12 +2,16 @@ from django.shortcuts import render,redirect
 from .tiingo import get_meta_data,get_price_data
 from .forms import TickerForm,InstrumentForm
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def add_view(request):
     form_if=InstrumentForm(request.POST or None)
     form=TickerForm(request.POST or None)
     if request.method=="POST":
         if form_if.is_valid():
+            form_if.save(commit=False)
+            form_if.user=request.user
             form_if.save()
             form_if=InstrumentForm()
 

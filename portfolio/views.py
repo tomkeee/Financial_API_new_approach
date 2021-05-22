@@ -7,14 +7,16 @@ from instrument.tiingo import get_meta_data,get_price_data
 from .utils import get_chart
 import pandas as pd
 
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def prettify(number):
     return '{:.2%}'.format(number)
-
+@login_required
 def portfolio_view(request):
     total=float(list(Instrument.objects.all().aggregate(total=Sum('total_price')).values())[0] or 0)
-    chart_type="#2"
+    chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
     if request.method=="POST":
@@ -68,7 +70,7 @@ def portfolio_view(request):
 
 
     
-
+@login_required
 def region_view(request):
     total=float(list(Instrument.objects.all().aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#3"
@@ -147,7 +149,7 @@ def region_view(request):
 
 
 
-
+@login_required
 def sector_view(request):
     total=float(list(Instrument.objects.all().aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#3"

@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
+from django.contrib.auth import get_user_model
+from matplotlib.pyplot import get
+
 
 # Create your models here.
 REGION_CATEGORY= (
@@ -17,8 +21,10 @@ STAKE_CATEGORY=(
         ('Cs','Cash'),
 )
 
+User=get_user_model()
 
 class Instrument(models.Model):
+    profile=models.ForeignKey(User,on_delete=CASCADE,blank=True)
     name=models.CharField(max_length=120)
     price=models.FloatField(default=0)
     quantity =models.PositiveIntegerField(default=0)

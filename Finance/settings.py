@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #my aps
     'instrument',
+    'profiles',
     'portfolio',
     #third app
     'crispy_forms',
@@ -122,7 +123,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+LOGIN_URL='/login/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
