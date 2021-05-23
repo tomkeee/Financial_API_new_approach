@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     'portfolio',
     #third app
     'crispy_forms',
-    'bootstrap4',
-    'mathfilters',
+    'bootstrap5',
 
 ]
 CRISPY_TEMPLATE_PACK='bootstrap4'

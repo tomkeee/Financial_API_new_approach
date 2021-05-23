@@ -6,24 +6,25 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def add_view(request):
-    form_if=InstrumentForm(request.POST or None)
+    form_add=InstrumentForm(request.POST or None)
     form=TickerForm(request.POST or None)
     if request.method=="POST":
-        if form_if.is_valid():
-            form_if.save(commit=False)
-            form_if.user=request.user
-            form_if.save()
-            form_if=InstrumentForm()
+        if form_add.is_valid():
+            data=InstrumentForm(request.POST)
+            obj=data.save(commit=False)
+            obj.profiles=request.user
+            obj.save()
 
         elif form.is_valid():
             ticker=request.POST['ticker']
             return HttpResponseRedirect(ticker)
         else:
             form=TickerForm()
-            form_if=InstrumentForm()
+            form_add=InstrumentForm()
+
     context={
         "form":form,
-        "form_if":form_if,
+        "form_if":form_add,
     }
     return render(request,"instrument/add.html",context)
 
@@ -41,6 +42,8 @@ def quote(request):
         "form":form,
     }
     return render(request,'instrument/quote.html',context)
+
+
 
 def ticker(request,tid):
     form=TickerForm(request.POST or None)

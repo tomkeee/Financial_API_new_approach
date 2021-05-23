@@ -15,7 +15,9 @@ def prettify(number):
     return '{:.2%}'.format(number)
 @login_required
 def portfolio_view(request):
-    total=float(list(Instrument.objects.all().aggregate(total=Sum('total_price')).values())[0] or 0)
+    user=request.user
+    print(user)
+    total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -31,13 +33,8 @@ def portfolio_view(request):
         form=TickerForm()
         form_b=BarTypeForm()
 
-    queryset=Instrument.objects.all()
+    queryset=Instrument.objects.filter(profiles=user)
 
-    counter=0
-    for item in queryset:
-        counter+=1
-    print(counter)
-    
     totals=[]
     for element in queryset:
         element=element.price
@@ -72,7 +69,8 @@ def portfolio_view(request):
     
 @login_required
 def region_view(request):
-    total=float(list(Instrument.objects.all().aggregate(total=Sum('total_price')).values())[0] or 0)
+    user=request.user
+    total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#3"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -88,7 +86,7 @@ def region_view(request):
         form=TickerForm()
         form_b=BarTypeForm()
     
-    queryset=Instrument.objects.all()
+    queryset=Instrument.objects.filter(profiles=user)
 
     totals=[]
     
@@ -131,7 +129,6 @@ def region_view(request):
 
 
     df=pd.DataFrame(table)
-    print(df)
     df.sort_values(by=['invested'],ascending=False, inplace=True)
     chart=get_chart(chart_type, df,labels=df['region'],y='invested',x='region')
     
@@ -151,7 +148,8 @@ def region_view(request):
 
 @login_required
 def sector_view(request):
-    total=float(list(Instrument.objects.all().aggregate(total=Sum('total_price')).values())[0] or 0)
+    user=request.user
+    total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#3"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -205,7 +203,6 @@ def sector_view(request):
 
 
     df=pd.DataFrame(table)
-    print(df)
     df.sort_values(by=['invested'],ascending=False, inplace=True)
     chart=get_chart(chart_type, df,labels=df['sector'],y='invested',x='sector')
 #

@@ -8,7 +8,7 @@
 <h1 class="mt-5">Register now</h1>
 <hr class="mt-0 mb-4">
 
-    <form method="POST" class="form-group">{% csrf_token %}
+    <form method="POST" class="form-group"> {% csrf_token %}
         {{form|crispy}}
         <p>Already have an account? <a href="/login/">Sign in</a></p>
         <button type="submit" class="btn btn-success">Register</button>

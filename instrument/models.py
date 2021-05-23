@@ -24,7 +24,7 @@ STAKE_CATEGORY=(
 
 User=get_user_model()
 class Instrument(models.Model):
-    profiles=models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    profiles=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     name=models.CharField(max_length=120)
     price=models.FloatField(default=0)
     quantity =models.PositiveIntegerField(default=0)
@@ -35,7 +35,6 @@ class Instrument(models.Model):
 
 #     def get_price(self):
 #         return self.total_price
-
 
     def save(self,*args,**kwargs):
         self.total_price=0+self.price * self.quantity
