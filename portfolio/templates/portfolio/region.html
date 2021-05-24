@@ -3,9 +3,8 @@
 {%block title%}
 Region
 {%endblock title%}
-{%block form %} {{form}} {%endblock form%}
 {%block content%}
-<div class="container-fluid">
+<div class="container-fluid col-10">
     <h2 class="text-center">Total investment: {{total|floatformat:"-2g"}} $</h2>
 
     <ul class="list-group mt-4">
@@ -27,17 +26,21 @@ Region
         <li class="list-group-item"><strong>Africa </strong>{{totals.5|floatformat:"-2g"}}$ - {{percentage.5}}</li>
     </ul>
 </div>
+<br>
 {%if total > 0 %}
 
-
-<div class="container-fluid mt-5">
+<div class="col-10 container-fluid mt-5 mb-5">
     <form action="" method="POST">{%csrf_token%}
         {{form_b|crispy}}
         <button type="submit" class="btn btn-primary ">View</button>
     </form>
   </div>
-  <div class="container mt-5">
-    <img src="data:image/png;base64, {{chart|safe}}">
-  </div>
+    <div class="ml-5 justify-content-center">
+      <div class="ml-5">
+      <div class="ml-5">
+      <img class="ml-5 center" src="data:image/png;base64, {{chart|safe}}">
+      </div>
+      </div>
+    </div>
 {%endif%}
 {%endblock%}

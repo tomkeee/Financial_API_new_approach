@@ -14,7 +14,7 @@ class RegisterForm(forms.Form):
         password1=self.cleaned_data.get("password1")
         password2=self.cleaned_data.get("password2")
         if password1 != password2:
-            raise forms.ValidationError("The give passwords do not match")
+            raise forms.ValidationError("The given passwords do not match")
         return password2
 
     def clean_email(self):

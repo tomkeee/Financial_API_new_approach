@@ -1,6 +1,6 @@
 from django import forms
-from .models import Instrument
-from django.forms import ModelForm
+from .models import Instrument,Stock
+from django.forms import ModelForm, widgets
 
 class TickerForm(forms.Form):
     ticker=forms.CharField(required=False,max_length=100,widget=forms.TextInput(attrs={"class":"form-control mr-sm-2","placeholder":"AAPL"}))
@@ -27,4 +27,11 @@ class BarTypeForm(forms.Form):
     
     chart_type=forms.ChoiceField(choices=CHART_CHOICES,label="Select Chart Type")
 
+class StockForm(ModelForm):
+    class Meta:
+        model=Stock
+        fields=['ticker']
+        widgets={
+            'ticker':forms.TextInput(attrs={'class':'form-control mr-2'})
+        }
 

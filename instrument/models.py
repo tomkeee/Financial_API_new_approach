@@ -1,7 +1,6 @@
 from django.db import models
-from django.db.models.deletion import CASCADE
 from django.contrib.auth import get_user_model
-from matplotlib.pyplot import get
+from django.urls import reverse
 
 
 # Create your models here.
@@ -23,6 +22,7 @@ STAKE_CATEGORY=(
 
 
 User=get_user_model()
+
 class Instrument(models.Model):
     profiles=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     name=models.CharField(max_length=120)
@@ -33,9 +33,6 @@ class Instrument(models.Model):
     
     total_price=models.FloatField(blank=True,default=0)
 
-#     def get_price(self):
-#         return self.total_price
-
     def save(self,*args,**kwargs):
         self.total_price=0+self.price * self.quantity
         self.total_price=round(self.total_price,2)
@@ -43,3 +40,13 @@ class Instrument(models.Model):
 
     def __str__(self):
         return f"{self.name}, quantity: {self.quantity}"
+
+    def get_absolute_url(self):
+        return reverse("update", kwargs={"pk": self.id})
+
+
+class Stock(models.Model):
+    ticker=models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.ticker

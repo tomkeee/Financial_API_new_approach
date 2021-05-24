@@ -34,7 +34,7 @@ def get_chart(chart_type,data,**kwargs):
     elif chart_type == "#3":
         x_axis=kwargs.get('x')
         y_axis=kwargs.get('y')
-        plt.plot(data[x_axis],data[y_axis],color='green',marker='o', linestyle="dashed")
+        plt.plot(data[x_axis],data[y_axis],color='green',marker='o')
 
 
     plt.tight_layout()

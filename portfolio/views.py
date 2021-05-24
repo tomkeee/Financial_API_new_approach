@@ -33,24 +33,28 @@ def portfolio_view(request):
         form=TickerForm()
         form_b=BarTypeForm()
 
-    queryset=Instrument.objects.filter(profiles=user)
+    queryset=Instrument.objects.filter(profiles=user).order_by('-total_price')
 
     totals=[]
     for element in queryset:
-        element=element.price
-        totals.append(element)
+        data=[]
 
-    percentage=[]
-    for instance in totals:
-        instance=instance/total
-        instance=prettify(instance)
-        percentage.append(instance)
+        obj=element.name
+        data.append(obj)
 
+        price=element.total_price
+        data.append(price)
+
+        percentage=price/total
+        percentage=prettify(percentage)
+        data.append(percentage)
+
+        totals.append(data)
+    
     context={
         "queryset":queryset,
         "total":total,
         "totals":totals,
-        "percentage":percentage,
         "form":form,
         "form_b":form_b
         }
@@ -71,7 +75,7 @@ def portfolio_view(request):
 def region_view(request):
     user=request.user
     total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    chart_type="#3"
+    chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
     if request.method=="POST":
@@ -90,22 +94,22 @@ def region_view(request):
 
     totals=[]
     
-    total_in = float(list(Instrument.objects.filter(region="In").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_in = float(list(Instrument.objects.filter(region="In",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_in)
 
-    total_as = float(list(Instrument.objects.filter(region="AS").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_as = float(list(Instrument.objects.filter(region="AS",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_as)
 
-    total_rus = float(list(Instrument.objects.filter(region="Rus").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_rus = float(list(Instrument.objects.filter(region="Rus",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_rus)
 
-    total_us = float(list(Instrument.objects.filter(region="US").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_us = float(list(Instrument.objects.filter(region="US",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_us)
 
-    total_eu = float(list(Instrument.objects.filter(region="EU").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_eu = float(list(Instrument.objects.filter(region="EU",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_eu)
 
-    total_af = float(list(Instrument.objects.filter(region="Af").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_af = float(list(Instrument.objects.filter(region="Af",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_af)
 
 
@@ -150,7 +154,7 @@ def region_view(request):
 def sector_view(request):
     user=request.user
     total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    chart_type="#3"
+    chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
     if request.method=="POST":
@@ -168,20 +172,19 @@ def sector_view(request):
 
     totals=[]
     
-    total_pm = float(list(Instrument.objects.filter(stake="pm").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_pm = float(list(Instrument.objects.filter(stake="pm",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_pm)
 
-    total_eg = float(list(Instrument.objects.filter(stake="Eg").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_eg = float(list(Instrument.objects.filter(stake="Eg",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_eg)
 
-    total_met = float(list(Instrument.objects.filter(stake="Met").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_met = float(list(Instrument.objects.filter(stake="Met",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_met)
 
-    total_eq = float(list(Instrument.objects.filter(stake="Eq").aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_eq)
-    
-    total_cs = float(list(Instrument.objects.filter(stake="Cs").aggregate(total=Sum('total_price')).values())[0] or 0)
+    total_cs = float(list(Instrument.objects.filter(stake="Cs",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     totals.append(total_cs)
+    total_eq = float(list(Instrument.objects.filter(stake="Eq",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
+    totals.append(total_eq)
 
     percentage=[]
 
