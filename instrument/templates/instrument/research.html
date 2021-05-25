@@ -6,7 +6,11 @@ Research
 {% block content %}
 {% if api%}
     {% if api == "Error" %}
-        There was a problem with your ticker symbol <b>{{ticker_wl}}</b>, please make sure that you spelled it correctly
+<div class="container">
+    <h5 class="lead">Ticker has not been found!</h5>
+        <hr class="col-11 my-4">
+    <p>There was a problem with your ticker symbol <b>{{ticker_wl}}</b>, please make sure that you spelled it correctly</p>
+</div>
     {%else%}
 
         <div class="container text-center">

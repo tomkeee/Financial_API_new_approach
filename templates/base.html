@@ -18,13 +18,12 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active mt-2 mr-3">
           <a class="dropdown-toggle" style="text-decoration:none;color: inherit;" href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            Account
+            {{request.user}}
           </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/watchlist/">Watchlist</a></li>
               <li><a class="dropdown-item" href="/add/">Add</a></li>
               <li><a class="dropdown-item" href="/list/">Update portfolio</a></li>
-              <li><a class="dropdown-item" href="/research/">Research</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/logout/">Logout</a></li>
             </ul>

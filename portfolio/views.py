@@ -92,36 +92,62 @@ def region_view(request):
     
     queryset=Instrument.objects.filter(profiles=user)
 
+
+    # new=Instrument.objects.filter(profiles=user).first()
+    # print(new.region)
+
     totals=[]
     
     total_in = float(list(Instrument.objects.filter(region="In",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_in)
+    data_in=[]
+    data_in.append(total_in)
+    data_in.append("Independent")
+    data_in.append(total_in)
+    totals.append(data_in)
 
     total_as = float(list(Instrument.objects.filter(region="AS",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_as)
+    data_as=[]
+    data_as.append(total_as)
+    data_as.append("Asia")
+    data_as.append(total_as)
+    totals.append(data_as)
 
     total_rus = float(list(Instrument.objects.filter(region="Rus",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_rus)
+    data_rus=[]
+    data_rus.append(total_rus)
+    data_rus.append("Russia Federation")
+    data_rus.append(total_rus)
+    totals.append(data_rus)
 
     total_us = float(list(Instrument.objects.filter(region="US",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_us)
+    data_us=[]
+    data_us.append(total_us)
+    data_us.append("United States")
+    data_us.append(total_us)
+    totals.append(data_us)
 
     total_eu = float(list(Instrument.objects.filter(region="EU",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_eu)
+    data_eu=[]
+    data_eu.append(total_eu)
+    data_eu.append("European Union")
+    data_eu.append(total_eu)
+    totals.append(data_eu)
 
     total_af = float(list(Instrument.objects.filter(region="Af",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_af)
+    data_af=[]
+    data_af.append(total_af)
+    data_af.append("Africa")
+    data_af.append(total_af)
+    totals.append(data_af)
 
-
-    percentage=[]
+    totals.sort(reverse=True)
+    
     for instance in totals:
         if total==0:
-            instance="0%"
-            percentage.append(instance)
+            instance[2]="0%"
         else:
-            instance=instance/total
-            instance=prettify(instance)
-            percentage.append(instance)
+            instance[2]=instance[2]/total
+            instance[2]=prettify(instance[2])
     
     table=[]
     table.append({"region":"Independent","invested":total_in})
@@ -132,6 +158,7 @@ def region_view(request):
     table.append({"region":"Africa","invested":total_af})
 
 
+
     df=pd.DataFrame(table)
     df.sort_values(by=['invested'],ascending=False, inplace=True)
     chart=get_chart(chart_type, df,labels=df['region'],y='invested',x='region')
@@ -139,11 +166,10 @@ def region_view(request):
     context={
         "total":total,
         "totals":totals,
-        "percentage":percentage,
         "form":form,
         "form_b":form_b,
-        "chart":chart
-        }
+        "chart":chart,
+         }
     return render(request,"portfolio/region.html",context)
 
 
@@ -173,30 +199,49 @@ def sector_view(request):
     totals=[]
     
     total_pm = float(list(Instrument.objects.filter(stake="pm",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_pm)
+    data_pm=[]
+    data_pm.append(total_pm)
+    data_pm.append("Precious Metals")
+    data_pm.append(total_pm)
+    totals.append(data_pm)
 
     total_eg = float(list(Instrument.objects.filter(stake="Eg",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_eg)
+    data_eg=[]
+    data_eg.append(total_eg)
+    data_eg.append("Energy sector")
+    data_eg.append(total_eg)
+    totals.append(data_eg)
 
     total_met = float(list(Instrument.objects.filter(stake="Met",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_met)
+    data_met=[]
+    data_met.append(total_met)
+    data_met.append("Metal sector")
+    data_met.append(total_met)
+    totals.append(data_met)
 
     total_cs = float(list(Instrument.objects.filter(stake="Cs",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_cs)
-    total_eq = float(list(Instrument.objects.filter(stake="Eq",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    totals.append(total_eq)
+    data_cs=[]
+    data_cs.append(total_cs)
+    data_cs.append("Cash")
+    data_cs.append(total_cs)
+    totals.append(data_cs)
 
-    percentage=[]
+    total_eq = float(list(Instrument.objects.filter(stake="Eq",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
+    data_eq=[]
+    data_eq.append(total_eq)
+    data_eq.append("Equity")
+    data_eq.append(total_eq)
+    totals.append(data_eq)
+
+    totals.sort(reverse=True)
 
     for instance in totals:
         if total==0:
-            instance="0%"
-            percentage.append(instance)
+            instance[2]="0%"
         else:
-            instance=instance/total
-            instance=prettify(instance)
-            percentage.append(instance)
-#
+            instance[2]=instance[2]/total
+            instance[2]=prettify(instance[2])
+
     table=[]
     table.append({"sector":"Precious metal","invested":total_pm})
     table.append({"sector":"Energy","invested":total_eg})
@@ -212,7 +257,6 @@ def sector_view(request):
     context={
         "total":total,
         "totals":totals,
-        "percentage":percentage,
         "form":form,
         "form_b":form_b,
         "chart":chart,
