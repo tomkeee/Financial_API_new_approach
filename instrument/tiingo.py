@@ -17,3 +17,5 @@ def get_price_data(ticker):
     url="https://api.tiingo.com/tiingo/daily/{}/prices".format(ticker)
     response=requests.get(url,headers=headers)
     return response.json()[0]
+
+API="pk_19c0b9bac0a84df3b10ec61dd1c2d718"

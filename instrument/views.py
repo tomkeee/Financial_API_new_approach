@@ -4,6 +4,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render,redirect
 import requests
 # from .tiingo import get_meta_data,get_price_data
+from .tiingo import API
 from .forms import TickerForm,InstrumentForm,StockForm
 from django.http import HttpResponseRedirect
 from .models import Instrument,Stock
@@ -124,7 +125,7 @@ def research(request):
 
     if request.method=="POST":
         ticker_wl=request.POST['ticker_wl'].upper()
-        api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + ticker_wl + "/quote?token=pk_19c0b9bac0a84df3b10ec61dd1c2d718")
+        api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + ticker_wl + "/quote?token="+ API)
         try:
             api=json.loads(api_request.content)
         except:
