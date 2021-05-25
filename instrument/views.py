@@ -3,7 +3,7 @@ from django.http import Http404
 from django.http.response import HttpResponse
 from django.shortcuts import render,redirect
 import requests
-from .tiingo import get_meta_data,get_price_data
+# from .tiingo import get_meta_data,get_price_data
 from .forms import TickerForm,InstrumentForm,StockForm
 from django.http import HttpResponseRedirect
 from .models import Instrument,Stock
@@ -51,25 +51,25 @@ def quote(request):
     return render(request,'instrument/quote.html',context)
 
 
-@login_required
-def ticker(request,tid):
-    form=TickerForm(request.POST or None)
-    if request.method=="POST":
-        if form.is_valid():
-            try:
-                ticker=request.POST['ticker'].upper()
-                return redirect(ticker)
-            except KeyError:
-                ticker="error"
-                return render(request,'instrument/watchlist.html',{'ticker_wl':ticker})
-    else:
-        form=TickerForm()
-    context={"form":form}
-    context['ticker']=tid
-    context['meta']=get_meta_data(tid)
-    context['price']=get_price_data(tid)
-    # context['fund']=get_fundamentals_data(tid)
-    return render(request,'instrument/ticker.html',context)
+# @login_required
+# def ticker(request,tid):
+#     form=TickerForm(request.POST or None)
+#     if request.method=="POST":
+#         if form.is_valid():
+#             try:
+#                 ticker=request.POST['ticker'].upper()
+#                 return redirect(ticker)
+#             except KeyError:
+#                 ticker="error"
+#                 return render(request,'instrument/watchlist.html',{'ticker_wl':ticker})
+#     else:
+#         form=TickerForm()
+#     context={"form":form}
+#     context['ticker']=tid
+#     context['meta']=get_meta_data(tid)
+#     context['price']=get_price_data(tid)
+#     # context['fund']=get_fundamentals_data(tid)
+#     return render(request,'instrument/ticker.html',context)
 
 @login_required
 def list(request):
@@ -143,18 +143,22 @@ def watchlist(request):
     import requests
     import json
 
+    user=request.user
     form=TickerForm(request.POST or None)
     form_add=StockForm(request.POST or None)
     if request.method=="POST":
         if form_add.is_valid():
-            form_add.save()
+            data=StockForm(request.POST or None)
+            obj=data.save(commit=False)
+            obj.profiles=request.user
+            obj.save()
             messages.success(request,("Stock has been added!"))
             return redirect('/watchlist/')
         elif form.is_valid():
             ticker=request.POST['ticker']
             return redirect(ticker)
     else:
-        ticker=Stock.objects.all()
+        ticker=Stock.objects.filter(profiles=user)
         output=[]
         for instance in ticker:
             data=[]
@@ -164,10 +168,10 @@ def watchlist(request):
                 data.append(instance.id)
                 data.append(api)
                 output.append(data)
-                
             except:
+                instance.delete()
                 api="Error"
-        print(output)
+
     context={
         "form":form,"form_add":form_add,"ticker":ticker,"output":output
         }

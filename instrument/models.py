@@ -46,6 +46,7 @@ class Instrument(models.Model):
 
 
 class Stock(models.Model):
+    profiles=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     ticker=models.CharField(max_length=10)
 
     def __str__(self):

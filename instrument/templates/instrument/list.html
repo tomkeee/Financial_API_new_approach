@@ -8,6 +8,7 @@ Portfolio list
     <div class="row justify-content-center mt-3 mb-5">
         <h2 class="col-8 mr-5">Your current portfolio is made of:</h2>
         <hr class="mt-0 col-8 ml-3">
+        {%if qs%}
         <p class="col-8 mb-5 mr-3">Click item in order to change it</p>
         {%for object in qs%}
         <div class="list-group mt-2 ml-5  mr-5 col-6">
@@ -15,5 +16,13 @@ Portfolio list
         </div>
         {%endfor%}
     </div>
-</div>
+    {%else%}
+<div class="container-fluid col-10 mb-5">
+    <div class="jumbotron">
+        <h1 class="display-4">No data to display</h1>
+        <p class="lead">Click the Add in order to append a new item, thanks to that you will be able to see you portfolio</p>
+        <hr class="my-4">
+        <p>Investing in financial markets requires you to have knowledge about various financial markets. This site afford you to see for yourself how well is your portfolio diversed</p>
+</div>      
+        {%endif%}
 {%endblock%}

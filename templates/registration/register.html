@@ -9,7 +9,7 @@
 <hr class="mt-0 mb-4">
 
     <form method="POST" class="form-group"> {% csrf_token %}
-        {{form|crispy}}
+        {{form|crispy}}  {% csrf_token %}
         <p>Already have an account? <a href="/login/">Sign in</a></p>
         <button type="submit" class="btn btn-success">Register</button>
     </form>
