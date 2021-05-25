@@ -1,2 +1,2 @@
-*.sqlite3
-tiingo.py
+*.sqlite?
+instrument/tiingo.py
