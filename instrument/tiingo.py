@@ -19,3 +19,4 @@ def get_price_data(ticker):
     return response.json()[0]
 
 API="pk_19c0b9bac0a84df3b10ec61dd1c2d718"
+X="no data"
