@@ -26,12 +26,13 @@ User=get_user_model()
 class Instrument(models.Model):
     profiles=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     name=models.CharField(max_length=120)
-    price=models.FloatField(default=0)
-    quantity =models.PositiveIntegerField(default=0)
-    region=models.CharField(max_length=3, choices=REGION_CATEGORY, default='In')
-    stake=models.CharField(max_length=3, choices=STAKE_CATEGORY, default="pm")
+    price=models.FloatField()
+    quantity =models.PositiveIntegerField()
+    region=models.CharField(max_length=3, choices=REGION_CATEGORY)
+    stake=models.CharField(max_length=3, choices=STAKE_CATEGORY)
+    created=models.DateTimeField(auto_now_add=True)
     
-    total_price=models.FloatField(blank=True,default=0)
+    total_price=models.FloatField(blank=True)
 
     def save(self,*args,**kwargs):
         self.total_price=0+self.price * self.quantity

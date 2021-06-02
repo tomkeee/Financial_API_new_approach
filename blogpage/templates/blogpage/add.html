@@ -1,0 +1,19 @@
+{%extends 'baseBlog.html' %}
+{%block title%} Create a new Article {%endblock title%}
+{%block content%}
+    {% if user.is_staff%}
+        <div class="container-fluid">
+            <div class="row justify-content-center mt-5 mb-5">
+                <form method="POST" enctype="multipart/form-data" class="col-9"> {%csrf_token%}
+                    {{form.media}}
+                    {{form.as_p}}
+                    {%if object.title%}
+                    <button type="submit" class="btn btn-success">Update</button>
+                    {%else%}
+                    <button type="submit" class="btn btn-success">Add</button>
+                    {%endif%}
+                </form>
+            </div>
+        </div>
+    {%endif%}
+{%endblock content%}

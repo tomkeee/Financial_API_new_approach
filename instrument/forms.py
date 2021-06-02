@@ -5,6 +5,14 @@ from django.forms import ModelForm, widgets
 class TickerForm(forms.Form):
     ticker=forms.CharField(required=False,max_length=100,widget=forms.TextInput(attrs={"class":"form-control mr-sm-2","placeholder":"AAPL"}))
 
+######################################## In the future ######################################################################
+# choices=Region.objects.all().values_list('name','name')
+# choices_list = []
+# for item in choices:
+# choice_list.append(item)
+#############################################################################################################################
+
+
 class InstrumentForm(ModelForm):
     class Meta:
         model=Instrument

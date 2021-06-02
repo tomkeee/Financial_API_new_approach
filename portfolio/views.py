@@ -16,7 +16,6 @@ def prettify(number):
 @login_required
 def portfolio_view(request):
     user=request.user
-    print(user)
     total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)

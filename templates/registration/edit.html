@@ -1,0 +1,24 @@
+{%extends 'registration/baseReg.html'%}
+{%load crispy_forms_tags%}
+
+{%block title%}Profile{%endblock title%}
+
+{%block content%}
+<div class="col-5 mt-5">
+    <h1 class="mt-5">Your Profile data:</h1>
+    <hr class="mt-0 mb-4">
+
+    <div class="mt-3">
+        <form method="POST" class="form_login">
+            {%csrf_token%}
+            {{form|crispy}}
+            <button class="btn btn-outline-success mt-3" type="sumbit">Submit</button>
+        </form> 
+        <a href="/"><button class="btn btn-outline-secondary mt-3">Home Page</button></a>
+
+    </div>
+    <div style="margin: top 150px;">
+
+    </div>
+<div class="col-5 mt-5">
+{%endblock%}

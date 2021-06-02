@@ -1,7 +1,11 @@
 from django.shortcuts import render,redirect
+from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login,logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserChangeForm,PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import get_user_model
+from django.views import generic
+from .forms import EditProfileForm,ChangePasswordForm
 
 
 from .forms import RegisterForm
@@ -53,3 +57,15 @@ def register_view(request):
             request.session['register_error']=1
 
     return render(request,"registration/register.html",{"form":form})
+
+class UserEditView(generic.UpdateView):
+    form_class=EditProfileForm
+    template_name="registration/edit.html"
+    success_url='/'
+
+    def get_object(self):
+        return self.request.user
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class=ChangePasswordForm
+    success_url=reverse_lazy('main')

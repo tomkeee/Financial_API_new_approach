@@ -5,20 +5,29 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-    <title>{% block title %}{% endblock title %}</title>
     <style>
-      .asteriskField {
-        display: none;
+
+      .space{
+        margin-top: 100px;
       }
-      </style>
+      .main{
+        min-height: 100vh;
+        display:flex;
+        flex-direction: column;
+      }
+      footer{
+        margin-top: auto;
+      }
+    </style>
+    <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
+<header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3" style="background-color: #e3f2fd;">   
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active mt-2 mr-3">
           <a class="dropdown-toggle" style="text-decoration:none;color: inherit;" href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            {{request.user}}
+            Account
           </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/watchlist/">Watchlist</a></li>
@@ -26,6 +35,7 @@
               <li><a class="dropdown-item" href="/list/">Update portfolio</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/logout/">Logout</a></li>
+              <li><a class="dropdown-item" href="/edit/">Profile</a></li>
             </ul>
         </li>
         <li class="nav-item">
@@ -37,42 +47,63 @@
         <li class="nav-item">
           <a class="nav-link" href="/sector">Sector</a>
         </li>
-        </ul>
+      </ul>
 
-          <div class="navbar navbar-light bg-light justify-content-between">
-            <!-- If we want to use tiingo (describtion open/high/low etc)  -->
-            <!-- <form class="form-inline my-2 my-lg-0" action="/quote/" method="POST">{%csrf_token%}
-              <input class="form-control mr-sm-2" type="search" placeholder="AAPL" aria-label="Search" name="ticker"> -->
+    <div class="navbar navbar-light bg-light justify-content-between">
+      <!-- If we want to use tiingo (describtion open/high/low etc)  -->
+      <!-- <form class="form-inline my-2 my-lg-0" action="/quote/" method="POST">{%csrf_token%}
+        <input class="form-control mr-sm-2" type="search" placeholder="AAPL" aria-label="Search" name="ticker"> -->
 
-            <!-- If we want to use iexcloud 1) (current price, P/E marketcap) -->
-            <form class="form-inline my-2 my-lg-0" action="/research/" method="POST">{%csrf_token%}
-              <input class="form-control mr-sm-2" type="search" placeholder="AAPL" aria-label="Search" name="ticker_wl">
+      <!-- If we want to use iexcloud 1) (current price, P/E marketcap) -->
+      <form class="form-inline my-2 my-lg-0" action="/research/" method="POST">{%csrf_token%}
+        <input class="form-control mr-sm-2" type="search" placeholder="AAPL" aria-label="Search" name="ticker_wl">
 
-              <!--NOT TO USE IN THE NAVBAR If we want to use iexcloud 2) (add stock) -->
-            <!-- <form class="form-inline my-2 my-lg-0" action="/watchlist/" method="POST">{%csrf_token%}
-              <input class="form-control mr-sm-2" type="search" placeholder="AAPL" aria-label="Search" name="ticker"> -->
+        <!--NOT TO USE IN THE NAVBAR If we want to use iexcloud 2) (add stock) -->
+      <!-- <form class="form-inline my-2 my-lg-0" action="/watchlist/" method="POST">{%csrf_token%}
+        <input class="form-control mr-sm-2" type="search" placeholder="AAPL" aria-label="Search" name="ticker"> -->
 
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-          </div>
-
-    </nav>
-    <div class="container">
-      <br/>
-      {%if messages%}
-        {%for message in messages%}
-
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          <strong>{{message}}</strong> You should check in on some of those fields below.
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {%endfor%}
-      {%endif%}
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
     </div>
-    {% block content %}
-    {% endblock content %}
-    
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
-    </body>
+  </nav>
+</header>
+<main class="main">
+<div class="container">
+  <br/>
+  {%if messages%}
+    {%for message in messages%}
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{message}}</strong> You should check in on some of those fields below.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {%endfor%}
+  {%endif%}
+</div>
+  
+  
+  {% block content %}{% endblock content %}
+</main>
+<footer class="space bg-light text-center text-white">
+  <!-- Grid container -->
+  <div class="container p-3 pb-0">
+    <!-- Section: Social media -->
+    <section class="mb-3">
+      <a href="https://twitter.com/ScierskiTomasz"> <img src="/media/twitter.png"  alt="Twitter account"></a>
+      <a class="ml-5" href="https://github.com/tomkeee"> <img src="/media/github.png" alt="github account"></a>
+      <a class="ml-5" href="https://pl.linkedin.com"> <img src="/media/lidin.png"  alt="Linkedin account"></a>
+      <a class="ml-5" href="mailto:tomsci16@gmail.com"> <img src="/media/gmail.png" alt="email adress"></a>
+      <a class="ml-5" href="/blog/"> <img src="/media/blog.png" alt="Blog"></a>
+    </section>
+  </div>
+
+  <div class="text-center p-1" style="background-color: rgba(0, 0, 0, 0.2);">
+    © 2021 Copyright: Icons made by
+    <a class="text-white" href="https://flaticon.com"> Freepik</a>
+  </div>
+
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
+</body>
 </html>

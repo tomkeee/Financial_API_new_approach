@@ -20,11 +20,13 @@ Region
       </thead>
       <tbody>
         {%for instance in totals%}
+        {% if instance.0%}
         <tr>
           <td><b>{{instance.1}}</b></td>
-          <td>{{instance.0}}$</td>
+          <td>{{instance.0|floatformat:"-2g"}}$</td>
           <td>{{instance.2}}</td>
         </tr>
+        {%endif%}
         {%endfor%}
       </tbody>
     </table>
@@ -38,7 +40,7 @@ Region
 {%endif%}
 <br>
 {%if total%}
-<div class="col-10 container-fluid mt-5 mb-5">
+<div class="col-10 container-fluid mt-3 mb-5">
   <form action="" method="POST">{%csrf_token%}
       {{form_b|crispy}}
       <button type="submit" class="btn btn-primary ">View</button>
@@ -47,7 +49,11 @@ Region
   <div class="ml-5justify-content-center">
     <div class="ml-5">
     <div class="ml-5">
+    <div class="ml-5">
+    <div class="ml-2">
     <img class="ml-5 center" src="data:image/png;base64, {{chart|safe}}">
+    </div>
+    </div>
     </div>
     </div>
   </div>

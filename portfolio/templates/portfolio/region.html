@@ -22,7 +22,7 @@ Region
         {%for instance in totals%}
         <tr>
           <td><b>{{instance.1}}</b></td>
-          <td>{{instance.0}}$</td>
+          <td>{{instance.0|floatformat:"-2g"}}$</td>
           <td>{{instance.2}}</td>
         </tr>
         {%endfor%}
@@ -38,7 +38,7 @@ Region
 {%endif%}
 <br>
 {%if total%}
-<div class="col-10 container-fluid mt-5 mb-5">
+<div class="col-10 container-fluid mt-3 mb-5">
   <form action="" method="POST">{%csrf_token%}
       {{form_b|crispy}}
       <button type="submit" class="btn btn-primary ">View</button>
