@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'profiles',
     'portfolio',
     'blogpage',
+    'data',
     #third app
     'crispy_forms',
     'ckeditor',

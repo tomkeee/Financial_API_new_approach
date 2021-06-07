@@ -43,6 +43,8 @@ urlpatterns = [
     path('',portfolio_view,name='main'),
     path('region/',region_view),
     path('sector/',sector_view),
+    path('calculator/',include('portfolio.urls')),
+    path('investment/',include('data.urls')),
 
     path('add/',add_view),
     path('list/',list),

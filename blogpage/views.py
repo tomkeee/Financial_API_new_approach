@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy,reverse
 from django.shortcuts import render,get_object_or_404
-from .models import Article,Comment
+from .models import Article,Comment,Category
 from .forms import AddForm,CommentForm
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView

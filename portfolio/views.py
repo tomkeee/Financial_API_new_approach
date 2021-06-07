@@ -261,3 +261,29 @@ def sector_view(request):
         "chart":chart,
         }
     return render(request,"portfolio/sector.html",context)
+
+def calculator(request):
+    try:
+        returns=float(request.POST.get('returns'))
+        years = float(request.POST.get('years'))
+        invested = float(request.POST.get('invested'))
+    except:
+        returns=0
+        years=0
+        invested=0
+
+    print(returns)
+    print(years)
+    print(invested)
+
+    value=invested*(1+returns*0.01)**years
+    profit=value-invested
+    round(profit,2)
+    round(value,2)
+
+    context={
+        "value":value,
+        "profit":profit,
+    }
+
+    return render(request,"portfolio/calculator.html",context)
