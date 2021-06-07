@@ -1,0 +1,18 @@
+{%extends 'base.html'%}
+{%block title%}
+Quote
+{%endblock title%}
+{% block content %}
+    <div class="container text-center">
+        <h1 class="mb-3">{{ticker}} : {{meta.name}}</h1>
+        <h5 class="m-4">Today's price for {{ticker}}</h5>
+        <table class="table text-center">
+            <tr><td>Open:</td><td>${{price.open}}</td></tr>
+            <tr><td>High:</td><td>${{price.high}}</td></tr>
+            <tr><td>Low:</td><td>${{price.low}}</td></tr>
+            <tr><td>Close:</td><td>${{price.close}}</td></tr>
+            <!-- <tr><td>P/E:</td><td>${{fund.peRatio}}</td></tr> -->
+        </table>
+        <p>Description:{{meta.description}}</p>
+    </div>
+{% endblock content %}

@@ -1,0 +1,46 @@
+{%extends 'base.html' %}
+{%block title%} Calculator {%endblock title%}
+{%block content%}
+<div class="contener ml-5 mr-5">
+    <div class="jumbotron">
+        <h1 class="display-4">There you can calculate your future result</h1><br/>
+        <p class="ml-2 lead">In the first column type the ammount you are willing to invest</p>
+        <p class="ml-2 lead">then the number of years you are willing to wait with your investment and estimated return of your investment</p>
+        <hr class="my-4">
+
+        <form class="form-inline justify-content-center mt-5 mb-3"  method="POST"> {%csrf_token%}
+            <div class="input-group mb-2 mr-sm-4">
+                <div class="input-group-prepend">
+                </div>
+                <input type="text" name="invested" pattern="([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]" class="form-control rounded-left " placeholder="Invested">
+                <div class="input-group-text">$</div>
+            </div>      
+            
+            <div class="input-group mb-2 mr-sm-4">
+                <div class="input-group-prepend">
+                </div>
+                <input type="text" name="years" pattern="([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]" class="form-control rounded-left" placeholder="Years of investment">
+                <div class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                </svg></div>
+            </div>      
+            
+            <div class="input-group mb-2 mr-sm-4">
+                <div class="input-group-prepend">
+                </div>
+            <input type="text" name="returns" pattern="([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]" class="form-control rounded-left" placeholder="returns">
+            <div class="input-group-text">%</div>
+            </div>      
+            
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        </form>
+        {%if value %}
+        <div class="mt-5 justify-content-center row">
+        <p class="lead col-2"><strong>Result:</strong> {{value|floatformat:"-2g"}}$</p><br/>
+        <p class="lead col-2"><strong>Profit:</strong> {{profit|floatformat:"-2g"}}$</p>
+        </div>
+        {%endif%}
+    </div>
+    
+</div>
+{%endblock%}

@@ -1,0 +1,18 @@
+{%extends 'registration/baseReg.html'%}
+{%load crispy_forms_tags%}
+
+{%block title%}Create an account{%endblock%}
+{%block intro%}Create a new account{%endblock%}
+
+{%block content%}
+<div class="col-3 mt-5">
+    <h1 class="mt-5">Register now</h1>
+    <hr class="mt-0 mb-4">
+
+        <form method="POST" class="form-group"> {% csrf_token %}
+            {{form|crispy}}  {% csrf_token %}
+            <p>Already have an account? <a href="/login/">Sign in</a></p>
+            <button type="submit" class="btn btn-success">Register</button>
+        </form>
+</div>
+{%endblock%}

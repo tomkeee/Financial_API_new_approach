@@ -1,0 +1,74 @@
+{%extends 'baseBlog.html' %}
+{%block title%} Home {%endblock title%}
+{%block content%}
+<div class="container mt-5">
+<div class="row justify-content-between">
+    <div class="col-8">
+        {{price}}
+        {%for instance in object_list%}
+        <div class="row col-12">
+                <div class="col-5">
+                    <div class="mb-5">
+                        <a href="{% url 'detail-article' instance.pk %}" >
+                            
+                            <img src="{{instance.image.url}}" alt="No data">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-7">
+                    <h3>
+                        <a style="color: inherit;text-decoration:none;" href="{% url 'detail-article' instance.pk %}">
+                            {{instance.title}} 
+                        </a>
+                    </h3>
+                    <p>
+                        {{instance.date}}
+                    </p>
+                </div>
+                
+                <hr>
+            </div>
+        {%endfor%}
+    </div>
+    <div class="col-3">
+        <table class="ml-5 table table-dark table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Exchange</th>
+                <th scope="col">Price</th>
+                <th scope="col">Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">USD/PLN</th>
+                <td>{{u_p}}</td>
+                <td>1.5%</td>
+              </tr>
+              <tr>
+                <th scope="row">USD/HKD</th>
+                <td>{{u_h}}</td>
+                <td>-0.7%</td>
+              </tr>
+              <tr>
+                <th scope="row">USD/CNY</th>
+                <td>{{u_c}}</td>
+                <td>0.89%</td>
+              </tr>
+              <tr>
+                <th scope="row">BTC/USD</th>
+                <td>{{btc_price|floatformat:"-2g"}}</td>
+                <td>{{btc_change}}%</td>
+              </tr>
+              <tr>
+                  <th></th>
+                  <td>{{api}}</td>
+                  <td></td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>
+</div>
+{%endblock content%}

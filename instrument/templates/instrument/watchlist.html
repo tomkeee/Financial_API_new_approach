@@ -1,0 +1,65 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}
+Watchlist
+{%endblock title%}
+{% block content %}
+  <div class="container-fluid">
+    <div class="row justify-content-center mt-3 mb-5">
+        <h2 class="col-8 mr-5">Your current watchlist includes:</h2>
+        <hr class="mt-0 col-8 ml-3">
+
+    
+  {%if ticker%}
+    <div class="col-10">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Ticker</th>
+            <th scope="col">Price</th>
+            <th scope="col">P/E</th>
+            <th scope="col">MarketCap</th>
+            <th scope="col">Dividend</th>
+            <th scope="col">Volume</th>
+            <th scope="col">Unfollow</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for instance in output%}
+            <tr>
+              <td>{{instance.1.symbol}}</td>
+              <td>{{instance.1.latestPrice|floatformat:"-2g"}} {% if instance.1.latestPrice %} $ {%else%}No data{%endif%}</td>
+              <td>{{instance.1.peRatio|floatformat:"-2g"}} {% if instance.1.peRatio > 0 %} {%else%}No data{%endif%}</td>
+              <td>{{instance.1.marketCap|floatformat:"-2g"}} {% if instance.1.marketCap %} $ {%else%}No data{%endif%}</td>
+              <td>{{0}} {% if instance.1.marketCap %} % {%else%}No data{%endif%}</td>
+              <td>{{instance.1.volume|floatformat:"-2g"}} {% if instance.1.volume >= 0 %} $ {%else%}No data{%endif%}</td>
+              <td><a style="color: inherit;text-decoration:none;"  href="{% url 'unfollow' instance.0 %}"><button  type="submit" class="ml-3 mt-1 btn btn-outline-danger btn-sm my-2 my-sm-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg></button> </a></td>
+            </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  {% else%}
+    <div class="container-fluid col-10 mb-5">
+        <div class="jumbotron">
+          <h1 class="display-4">No data to display</h1>
+          <p class="lead">Click the Add in order to append a new item, thanks to that you will be able to see you Watchlist</p>
+          <hr class="my-4">
+          <p>Investing in financial markets requires you to have knowledge about various financial markets. This site afford you to see for yourself how well is your portfolio diversed </p>
+      </div>
+    </div>
+  {%endif%}
+    <div class="mt-5"></div>
+      <div class="row mt-5">
+        <form class="form-inline justify-content-center  my-2 my-lg-0" action="/watchlist/" method="POST">{%csrf_token%}
+          {{form_add}}
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add to watchlist</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{%endblock content%}
+  

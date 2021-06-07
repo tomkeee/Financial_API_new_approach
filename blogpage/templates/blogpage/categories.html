@@ -1,0 +1,37 @@
+{%extends 'baseBlog.html' %}
+{%block title%} Home {%endblock title%}
+{%block content%}
+    <div class="container mt-5">
+    <div class="row">
+    <div class="col-md-8">
+    {% if posts%}
+        {%for instance in posts%}
+            <div class="post row mt-2">
+                <div class="col-md-5">
+                    <div class="mb-5">
+                        <a href="{% url 'detail-article' instance.pk %}" >
+                            
+                            <img src="{{instance.image.url}}" alt="No data">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <h3>
+                        <a style="color: inherit;text-decoration:none;" href="{% url 'detail-article' instance.pk %}">
+                            {{instance.title}} Czy jest sens inwestowac w obligacje w okolicy?sdfsdagsdfgsdfg  sfda sdfgsdfg 
+                            
+                        </a>
+                    </h3>
+                    <p>
+                        {{instance.date}}
+                    </p>
+                </div>
+            </div>
+        {%endfor%}
+    {%else%}
+        <h3>Sorry this page does not exist...</h3>
+    {%endif%}
+    </div>
+    </div>
+    </div>
+{%endblock content%}

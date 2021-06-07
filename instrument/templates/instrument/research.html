@@ -1,0 +1,29 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}
+Research
+{%endblock title%}
+{% block content %}
+    {% if api%}
+        {% if api == "Error" %}
+            <div class="container">
+                <h5 class="lead">Ticker has not been found!</h5>
+                <hr class="col-11 my-4">
+                <p>There was a problem with your ticker symbol <b>{{ticker_wl}}</b>, please make sure that you spelled it correctly</p>
+            </div>
+
+        {%else%}
+            <div class="container text-center">
+                <h1 class="mb-3">{{api.companyName}}</h1>
+                <h5 class="m-4">Today's price for {{api.symbol}}</h5>
+                <table class="table text-center">
+                    <tr><td>Latest:</td><td>{{api.latestPrice|floatformat:"-2g"}} $</td></tr>
+                    <tr><td>marketCap:</td><td>{{api.marketCap|floatformat:"-2g"}} $</td></tr>
+                    <tr><td>P/E:</td><td>{{api.peRatio}} </td></tr>
+                    <tr><td>YTD:</td><td>{{api.ytdChange|floatformat:"-2g"}} $</td></tr>
+                    <!-- <tr><td>P/E:</td><td>${{fund.peRatio}}</td></tr> -->
+                </table>
+            </div>
+        {%endif%}
+    {% endif %}
+{% endblock content %}
