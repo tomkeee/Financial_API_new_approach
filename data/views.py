@@ -1,3 +1,4 @@
+from portfolio.views import prettify
 from django.shortcuts import render
 from django.views.generic import ListView
 from instrument.models import Instrument
@@ -65,10 +66,13 @@ class InstrumentInvestments(ListView):
                 index=tickers.index(instance.name)
                 data[index]['investment'] += instance.total_price
                 data[index]['hodler'] += 1
-                data[index]['hodler_per']=data[index]['hodler']/all_users
+
+                hodler_per=data[index]['hodler']/all_users
+                hodler_per=prettify(hodler_per)
+                data[index]['hodler_per']=hodler_per
 
                 investment_per=data[index]['investment']/total
-                investment_per=(round(investment_per,2) *100)
+                investment_per=prettify(investment_per)
                 data[index]['investment_per']=investment_per
 
             else:
@@ -79,12 +83,13 @@ class InstrumentInvestments(ListView):
                 package['ticker']=instance.name
                 package['investment']=instance.total_price
                 package['hodler']=1
+
                 hodler_per=1/all_users
-                round(hodler_per,2)
+                hodler_per=prettify(hodler_per)
                 package['hodler_per']=hodler_per
 
                 investment_per=instance.total_price/total
-                investment_per=(round(investment_per,2) *100)
+                investment_per=prettify(investment_per)
                 package['investment_per']=investment_per
 
                 data.append(package)
@@ -115,7 +120,7 @@ def RegionInvestments(request):
             data[index]['investment'] += instance.total_price
 
             investment_per=data[index]['investment']/total
-            investment_per=(100*round(investment_per,2))
+            investment_per=prettify(investment_per)
             data[index]['investment_per']=investment_per
 
 
@@ -126,7 +131,7 @@ def RegionInvestments(request):
                 data[index]['hodler'] += [instance.profiles.username]
 
             hodler_per=data[index]['hodler_num']/all_users
-            hodler_per=(round(hodler_per,2) * 100)
+            hodler_per=prettify(hodler_per)
             data[index]['hodler_per']=hodler_per
 
         else:
@@ -140,11 +145,11 @@ def RegionInvestments(request):
             package['investment']=instance.total_price
 
             hodler_per=1/all_users
-            hodler_per = (round(hodler_per,2) * 100)
+            hodler_per = prettify(hodler_per)
             package['hodler_per']=hodler_per
 
             investment_per=instance.total_price/total
-            investment_per=(100*round(investment_per,2))
+            investment_per=prettify(investment_per)
             package['investment_per']=investment_per
             
             data.append(package)
@@ -177,7 +182,7 @@ def SectorInvestments(request):
             data[index]['investment'] += instance.total_price
 
             investment_per=data[index]['investment']/total
-            investment_per=(100*round(investment_per,2))
+            investment_per=prettify(investment_per)
             data[index]['investment_per']=investment_per
 
 
@@ -188,7 +193,7 @@ def SectorInvestments(request):
                 data[index]['hodler'] += [instance.profiles.username]
 
             hodler_per=data[index]['hodler_num']/all_users
-            hodler_per=(round(hodler_per,2) * 100)
+            hodler_per=prettify(hodler_per)
             data[index]['hodler_per']=hodler_per
 
         else:
@@ -202,11 +207,11 @@ def SectorInvestments(request):
             package['investment']=instance.total_price
 
             hodler_per=1/all_users
-            hodler_per=(round(hodler_per,2) * 100)
+            hodler_per=prettify(hodler_per)
             package['hodler_per']=hodler_per
 
             investment_per=instance.total_price/total
-            investment_per=(100*round(investment_per,2))
+            investment_per=prettify(investment_per)
             package['investment_per']=investment_per
             
             data.append(package)

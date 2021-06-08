@@ -18,7 +18,7 @@
             <tr>
             <td><b>{{instance.ticker}} </b></td>
             <td>{{instance.investment|floatformat:"-2g" }} $</td>
-            <td>{{instance.hodler_per}}%</td>
+            <td>{{instance.hodler_per}}</td>
             <td>
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#{{instance.ticker}}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
@@ -35,10 +35,10 @@
                             </div>
                             <div class="modal-body">
                                 <h1 class="display-6">Popularity</h1>
-                                    <p class="lead"> This asset is currently held by {% if instance.hodler < 2 %} a single user <br/> {%else%} {{instance.hodler}} users <br/> {%endif%} which stands for {{instance.hodler_per}}% of the entire community ({{all_users}} users)</p>
+                                    <p class="lead"> This asset is currently held by {% if instance.hodler < 2 %} a single user <br/> {%else%} {{instance.hodler}} users <br/> {%endif%} which stands for {{instance.hodler_per}} of the entire community ({{all_users}} users)</p>
                                 <hr>
                                 <h1 class="display-6">Investments</h1>
-                                    <p class="lead">{{instance.investment|floatformat:"-2g" }} $ are invested which stands for {{instance.investment_per}} %</p>
+                                    <p class="lead">{{instance.investment|floatformat:"-2g" }} $ are invested which stands for {{instance.investment_per}} </p>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

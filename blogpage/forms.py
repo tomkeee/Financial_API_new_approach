@@ -1,7 +1,7 @@
 from django import forms
 from .models import Article,Category, Comment
 
-choice=["none","none"]
+choice=[]
 category= Category.objects.all().values_list('name','name')
 for instance in category:
     choice.append(instance)

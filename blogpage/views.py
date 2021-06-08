@@ -36,15 +36,6 @@ class ArticleListView(ListView):
 
         context['api']=api
 ##########################################################  exchange rate  #############################################################
-        
-        url3="https://www.alphavantage.co/query?function=OVERVIEW&symbol="+"GDXJ"+"&apikey=" + str(API)
-        
-        response=requests.get(url3)
-        response=response.json()
-
-        context['as']=response
-
-
         url2 = "https://currency-exchange.p.rapidapi.com/exchange"
 
         querystring_up = {"to":"PLN","from":"USD","q":"1.0"}

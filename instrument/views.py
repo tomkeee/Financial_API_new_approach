@@ -3,8 +3,6 @@ from django.http import Http404
 from django.http.response import HttpResponse
 from django.shortcuts import render,redirect
 import requests
-# from .tiingo import get_meta_data,get_price_data
-from .tiingo import API
 from .forms import TickerForm,InstrumentForm,StockForm
 from django.http import HttpResponseRedirect
 from .models import Instrument,Stock

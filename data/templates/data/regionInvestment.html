@@ -16,9 +16,9 @@
         <tbody>
             {%for instance in data%}
             <tr>
-            <td><b>{%if instance.region == "In"%} Independent {%elif instance.region == "Af"%} Africa {%elif instance.region == "US"%} United States {%elif instance.region == "EU"%} Europe {%elif instance.region == "AS"%} Asia {%elif instance.region == "Rus"%} Rusian Federation {%endif%} </b></td>
+            <td><b>{{instance.region}}</b></td>
             <td>{{instance.investment|floatformat:"-2g" }} $</td>
-            <td>{{instance.hodler_per}}%</td>
+            <td>{{instance.hodler_per}}</td>
             <td>
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#{{instance.region}}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
@@ -30,15 +30,15 @@
                         <div class="modal-dialog modal-lg">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h1 class="display-3" style="margin-left: auto;" >{{instance.region}}</h1>
+                              <h1 class="display-3" style="margin-left: auto;" >{%if instance.region == "In"%} Independent {%elif instance.region == "AS"%} Asia {%elif instance.region == "EU"%} Europe {%elif instance.region == "US"%} United States {%elif instance.region == "Rus"%} Russian Federation{%elif instance.region == "Af"%}Africa {%endif%} </h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <h1 class="display-6">Popularity</h1>
-                                    <p class="lead"> This asset is currently held by {% if instance.hodler_num < 1.5 %} a single user <br/> {%else%} {{instance.hodler_num}} users <br/> {%endif%} which stands for {{instance.hodler_per}}% of the entire community ({{all_users}} users)</p>
+                                    <p class="lead"> This asset is currently held by {% if instance.hodler_num < 1.5 %} a single user <br/> {%else%} {{instance.hodler_num}} users <br/> {%endif%} which stands for {{instance.hodler_per}} of the entire community ({{all_users}} users)</p>
                                 <hr>
                                 <h1 class="display-6">Investments</h1>
-                                    <p class="lead">{{instance.investment|floatformat:"-2g" }} $ are invested which stands for {{instance.investment_per}} %</p>
+                                    <p class="lead">{{instance.investment|floatformat:"-2g" }}$ are invested which stands for {{instance.investment_per}} </p>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

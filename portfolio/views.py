@@ -3,7 +3,6 @@ from instrument.models import Instrument
 from instrument.forms import TickerForm,BarTypeForm
 from django.db.models import Sum, query
 from django.http import HttpResponse
-from instrument.tiingo import get_meta_data,get_price_data
 from .utils import get_chart
 import pandas as pd
 
