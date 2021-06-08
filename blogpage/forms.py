@@ -2,9 +2,9 @@ from django import forms
 from .models import Article,Category, Comment
 
 choice=[]
-category= Category.objects.all().values_list('name','name')
-for instance in category:
-    choice.append(instance)
+# category= Category.objects.all().values_list('name','name')
+# for instance in category:
+#     choice.append(instance)
 
 class AddForm(forms.ModelForm):
     class Meta:

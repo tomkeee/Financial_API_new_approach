@@ -5,11 +5,9 @@ Region
 {%endblock title%}
 {%block content%}
 <div class="container-fluid col-10 mb-5">
-{%if total > 0%}
+  {%if total%}
     <h2 class="text-center mb-4">Total investment: {{total|floatformat:"-2g"}} $</h2>
-    {%endif%}
 
-    {%if totals%}
     <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -37,6 +35,7 @@ Region
   <p class="lead">Click the Add in order to append a new item, thanks to that you will be able to see you portfolio</p>
   <hr class="my-4">
   <p>Investing in financial markets requires you to have knowledge about various financial markets. This site afford you to see for yourself how well is your portfolio diversed</p>
+  </div>
 {%endif%}
 <br>
 {%if total%}

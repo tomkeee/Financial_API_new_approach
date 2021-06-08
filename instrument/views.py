@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from .models import Instrument,Stock
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView,DetailView,CreateView,UpdateView
+from .api import API
 
 @login_required
 def add_view(request):
@@ -124,6 +125,7 @@ def research(request):
     if request.method=="POST":
         ticker_wl=request.POST['ticker_wl'].upper()
         api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + ticker_wl + "/quote?token="+ API)
+
         try:
             api=json.loads(api_request.content)
         except:
