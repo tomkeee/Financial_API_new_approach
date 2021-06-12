@@ -9,6 +9,8 @@ from .models import Instrument,Stock
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView,DetailView,CreateView,UpdateView
 from .api import API
+import aiohttp
+import asyncio
 
 @login_required
 def add_view(request):
@@ -140,7 +142,7 @@ def research(request):
         return render(request,'instrument/research.html',{'ticker':"Enter a Ticker symbol above"})
 
 @login_required
-def watchlist(request):
+async def watchlist(request):
     import requests
     import json
 
@@ -161,20 +163,32 @@ def watchlist(request):
     else:
         ticker=Stock.objects.filter(profiles=user)
         output=[]
+        urls=[]
         for instance in ticker:
             data=[]
             api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + str(instance) + "/quote?token=pk_19c0b9bac0a84df3b10ec61dd1c2d718")
-            try:
-                api=json.loads(api_request.content)
-                data.append(instance.id)
-                data.append(api)
-                output.append(data)
-            except:
-                instance.delete()
-                api="Error"
+            api=api_request.json()
+            urls.append(api)
 
+        async with aiohttp.ClientSession() as client:
+            tasks=[]
+            for url in urls:
+                task=asyncio.ensure_future(client,url)
+                task.append(tasks)
+            results= await asyncio.gather(*tasks)
+
+
+            # try:
+            #     api=api_request.json()
+            #     data.append(instance.id)
+            #     data.append(api)
+            #     output.append(data)
+            # except:
+            #     instance.delete()
+            #     api="Error"
+            
     context={
-        "form":form,"form_add":form_add,"ticker":ticker,"output":output
+        "form":form,"form_add":form_add,"ticker":ticker,"output":results[0]
         }
 
     return render(request,'instrument/watchlist.html',context)
