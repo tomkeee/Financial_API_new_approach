@@ -1,21 +1,25 @@
 from django.shortcuts import render,redirect
 from instrument.models import Instrument
 from instrument.forms import TickerForm,BarTypeForm
-from django.db.models import Sum, query
+from django.db.models import Sum, query,Count
 from django.http import HttpResponse
-from .utils import get_chart
+from .utils import get_chart,prettify
 import pandas as pd
 
 from django.contrib.auth.decorators import login_required
 
-
-# Create your views here.
-def prettify(number):
-    return '{:.2%}'.format(number)
 @login_required
 def portfolio_view(request):
     user=request.user
-    total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
+    
+    try:
+        total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
+    except:
+        total=0
+
+    # would work using annotate 
+    # total=float(list(Instrument.objects.filter(profiles=user).aggregate(totalz=Sum('total_price')).values())[0] or 0)
+
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -34,6 +38,8 @@ def portfolio_view(request):
     queryset=Instrument.objects.filter(profiles=user).order_by('-total_price')
 
     totals=[]
+
+    
     for element in queryset:
         data=[]
 
@@ -72,7 +78,7 @@ def portfolio_view(request):
 @login_required
 def region_view(request):
     user=request.user
-    total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
+    total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -88,78 +94,44 @@ def region_view(request):
         form=TickerForm()
         form_b=BarTypeForm()
     
+
     queryset=Instrument.objects.filter(profiles=user)
-
-
-    # new=Instrument.objects.filter(profiles=user).first()
-    # print(new.region)
-
     totals=[]
-    
-    total_in = float(list(Instrument.objects.filter(region="In",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_in=[]
-    data_in.append(total_in)
-    data_in.append("Independent")
-    data_in.append(total_in)
-    totals.append(data_in)
-
-    total_as = float(list(Instrument.objects.filter(region="AS",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_as=[]
-    data_as.append(total_as)
-    data_as.append("Asia")
-    data_as.append(total_as)
-    totals.append(data_as)
-
-    total_rus = float(list(Instrument.objects.filter(region="Rus",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_rus=[]
-    data_rus.append(total_rus)
-    data_rus.append("Russia Federation")
-    data_rus.append(total_rus)
-    totals.append(data_rus)
-
-    total_us = float(list(Instrument.objects.filter(region="US",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_us=[]
-    data_us.append(total_us)
-    data_us.append("United States")
-    data_us.append(total_us)
-    totals.append(data_us)
-
-    total_eu = float(list(Instrument.objects.filter(region="EU",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_eu=[]
-    data_eu.append(total_eu)
-    data_eu.append("European Union")
-    data_eu.append(total_eu)
-    totals.append(data_eu)
-
-    total_af = float(list(Instrument.objects.filter(region="Af",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_af=[]
-    data_af.append(total_af)
-    data_af.append("Africa")
-    data_af.append(total_af)
-    totals.append(data_af)
-
-    totals.sort(reverse=True)
-    
-    for instance in totals:
-        if total==0:
-            instance[2]="0%"
+    regions=[]
+    for instance in queryset:
+        if instance.region in regions:
+            index=regions.index(instance.region)
+            totals[index][0] += instance.total_price
+            percentage=totals[index][0]/total
+            percentage=prettify(percentage)
+            totals[index][2]=percentage
         else:
-            instance[2]=instance[2]/total
-            instance[2]=prettify(instance[2])
+            regions.append(instance.region)
+
+            data_new=[]
+            data_new.append(instance.total_price)  
+            data_new.append(instance.region)
+            percentage=instance.total_price/total
+            percentage=prettify(percentage)
+            data_new.append(percentage)
+            totals.append(data_new)
+    totals.sort(reverse=True)
+
+    print(totals)
     
-    table=[]
-    table.append({"region":"Independent","invested":total_in})
-    table.append({"region":"Asia","invested":total_as})
-    table.append({"region":"Russia","invested":total_rus})
-    table.append({"region":"US","invested":total_us})
-    table.append({"region":"Europe","invested":total_eu})
-    table.append({"region":"Africa","invested":total_af})
+    sorted_dictionary=[]
+    for instance in totals:
+        data={}
+        data['invested']=instance[0]
+        data['region']=instance[1]
+        data['percentage']=instance[2]
+        sorted_dictionary.append(data)
 
-
-
-    df=pd.DataFrame(table)
-    df.sort_values(by=['invested'],ascending=False, inplace=True)
-    chart=get_chart(chart_type, df,labels=df['region'],y='invested',x='region')
+    if totals:
+        df=pd.DataFrame(sorted_dictionary)
+        chart=get_chart(chart_type, df,labels=df['region'],y='invested',x='region')
+    else:
+        chart=""
     
     context={
         "total":total,
@@ -171,13 +143,8 @@ def region_view(request):
     return render(request,"portfolio/region.html",context)
 
 
-
-
-
 @login_required
 def sector_view(request):
-    user=request.user
-    total=float(list(Instrument.objects.filter(profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -193,65 +160,47 @@ def sector_view(request):
         form=TickerForm()
         form_b=BarTypeForm()
     
+    user=request.user
+    try:
+        total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
+    except:
+        total=0
 
-    totals=[]
-    
-    total_pm = float(list(Instrument.objects.filter(stake="pm",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_pm=[]
-    data_pm.append(total_pm)
-    data_pm.append("Precious Metals")
-    data_pm.append(total_pm)
-    totals.append(data_pm)
+    totals=[]    
+    sectors=[]
 
-    total_eg = float(list(Instrument.objects.filter(stake="Eg",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_eg=[]
-    data_eg.append(total_eg)
-    data_eg.append("Energy sector")
-    data_eg.append(total_eg)
-    totals.append(data_eg)
-
-    total_met = float(list(Instrument.objects.filter(stake="Met",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_met=[]
-    data_met.append(total_met)
-    data_met.append("Metal sector")
-    data_met.append(total_met)
-    totals.append(data_met)
-
-    total_cs = float(list(Instrument.objects.filter(stake="Cs",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_cs=[]
-    data_cs.append(total_cs)
-    data_cs.append("Cash")
-    data_cs.append(total_cs)
-    totals.append(data_cs)
-
-    total_eq = float(list(Instrument.objects.filter(stake="Eq",profiles=user).aggregate(total=Sum('total_price')).values())[0] or 0)
-    data_eq=[]
-    data_eq.append(total_eq)
-    data_eq.append("Equity")
-    data_eq.append(total_eq)
-    totals.append(data_eq)
-
+    queryset=Instrument.objects.filter(profiles=user)
+    for instance in queryset:
+        if instance.sector in sectors:
+            index=sectors.index(instance.sector)
+            totals[index][1] += instance.total_price
+            percentage=totals[index][1]/total
+            percentage=prettify(percentage)
+            totals[index][2]=percentage
+        else:
+            sectors.append(instance.sector)
+            data_new=[]
+            data_new.append(instance.sector)
+            data_new.append(instance.total_price)  
+            percentage=instance.total_price/total
+            percentage=prettify(percentage)
+            data_new.append(percentage)
+            totals.append(data_new)
     totals.sort(reverse=True)
 
+    sorted_dictionary=[]
     for instance in totals:
-        if total==0:
-            instance[2]="0%"
-        else:
-            instance[2]=instance[2]/total
-            instance[2]=prettify(instance[2])
+        data={}
+        data['sector']=instance[0]
+        data['invested']=instance[1]
+        data['percentage']=instance[2]
+        sorted_dictionary.append(data)
+    if totals:
+        df=pd.DataFrame(sorted_dictionary)
+        chart=get_chart(chart_type, df,labels=df['sector'],y='invested',x='sector')
+    else:
+        chart=""
 
-    table=[]
-    table.append({"sector":"Precious metal","invested":total_pm})
-    table.append({"sector":"Energy","invested":total_eg})
-    table.append({"sector":"Equity","invested":total_eq})
-    table.append({"sector":"Cash","invested":total_cs})
-    table.append({"sector":"Metals","invested":total_met})
-
-
-    df=pd.DataFrame(table)
-    df.sort_values(by=['invested'],ascending=False, inplace=True)
-    chart=get_chart(chart_type, df,labels=df['sector'],y='invested',x='sector')
-#
     context={
         "total":total,
         "totals":totals,
@@ -270,10 +219,6 @@ def calculator(request):
         returns=0
         years=0
         invested=0
-
-    print(returns)
-    print(years)
-    print(invested)
 
     value=invested*(1+returns*0.01)**years
     profit=value-invested

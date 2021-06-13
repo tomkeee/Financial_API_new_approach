@@ -1,8 +1,7 @@
 {%extends 'base.html' %}
-{%block title%} Sector Investments {%endblock title%}
+{%block title%} Region Investments {%endblock title%}
 {%block content%}
 <div class="container-fluid col-10 mb-5">
-  {%if total%}
     <h1 class="display-6 text-center">Value of all assets: {{total|floatformat:"-2g"}} $</h1>
     <br/>
     <table class="mt-4 table table-striped table-hover">
@@ -17,29 +16,29 @@
         <tbody>
             {%for instance in data%}
             <tr>
-            <td><b>{%if instance.sector == "pm"%} Precious Metals {%elif instance.sector == "Eg"%} Energy {%elif instance.sector == "MEt"%} Metals {%elif instance.sector == "Eq"%} Equity {%elif instance.sector == "Cs"%} Cash {%endif%}</b></td>
-            <td>{{instance.investment|floatformat:"-2g" }} $</td>
-            <td>{{instance.hodler_per}}</td>
+            <td><b>{%if instance.4 == "pm"%} Precious Metals {%elif instance.4 == "Eg"%} Energy {%elif instance.4 == "Met"%} Metals {%elif instance.4 == "Eq"%} Equity {%elif instance.4 == "Cs"%} Cash {%endif%}</b></td>
+            <td>{{instance.0|floatformat:"-2g" }} $</td>
+            <td>{{instance.2}}</td>
             <td>
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#{{instance.sector}}">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#{{instance.4}}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
                         <path d="m10.277 5.433-4.031.505-.145.67.794.145c.516.123.619.309.505.824L6.101 13.68c-.34 1.578.186 2.32 1.423 2.32.959 0 2.072-.443 2.577-1.052l.155-.732c-.35.31-.866.434-1.206.434-.485 0-.66-.34-.536-.939l1.763-8.278zm.122-3.673a1.76 1.76 0 1 1-3.52 0 1.76 1.76 0 0 1 3.52 0z"/>
                       </svg>
                     </button>
 
-                    <div class="modal fade" id="{{instance.sector}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="{{instance.4}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h1 class="display-3" style="margin-left: auto;" >{%if instance.sector == "pm"%} Precious Metals {%elif instance.sector == "Eg"%} Energy {%elif instance.sector == "Met"%} Metals {%elif instance.sector == "Eq"%} Equity {%elif instance.sector == "Cs"%} Cash {%endif%}</h1>
+                              <h1 class="display-3" style="margin-left: auto;" >{%if instance.4 == "pm"%} Precious Metals {%elif instance.4 == "Eg"%} Energy {%elif instance.4 == "Met"%} Metals {%elif instance.4 == "Eq"%} Equity {%elif instance.4 == "Cs"%} Cash {%endif%}</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <h1 class="display-6">Popularity</h1>
-                                    <p class="lead"> This asset is currently held by {% if instance.hodler_num < 1.5 %} a single user <br/> {%else%} {{instance.hodler_num}} users <br/> {%endif%} which stands for {{instance.hodler_per}} of the entire community ({{all_users}} users)</p>
+                                    <p class="lead"> This asset is currently held by {% if instance.1 < 1.5 %} a single user <br/> {%else%} {{instance.1}} users <br/> {%endif%} which stands for {{instance.2}} of the entire community ({{all_users}} users)</p>
                                 <hr>
                                 <h1 class="display-6">Investments</h1>
-                                    <p class="lead">{{instance.investment|floatformat:"-2g" }}$ are invested which stands for {{instance.investment_per}} </p>
+                                    <p class="lead">{{instance.0|floatformat:"-2g" }}$ are invested which stands for {{instance.3}} </p>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -53,13 +52,5 @@
             {%endfor%}
         </tbody>
     </table>
-  {%else %}
-    <div class="jumbotron">
-      <h1 class="display-4">No data to display</h1>
-      <p class="lead">Click the Add in order to append a new item, thanks to that you will be able to see you portfolio</p>
-      <hr class="my-4">
-      <p>Investing in financial markets requires you to have knowledge about various financial markets. This site afford you to see for yourself how well is your portfolio diversed</p>
-      </div>
-  {%endif%}
 </div>
 {%endblock content%}

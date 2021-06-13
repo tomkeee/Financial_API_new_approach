@@ -5,19 +5,19 @@ from django.urls import reverse
 
 # Create your models here.
 REGION_CATEGORY= (
-        ('In','Independent'),
-        ('EU','Europe'),
-        ('Af','Africa'),
-        ('US','United States'),
-        ('AS','Asia'),
-        ('Rus','Russia'),
+        ('Independent','Independent'),
+        ('Europe','Europe'),
+        ('Africa','Africa'),
+        ('United States','United States'),
+        ('Asia','Asia'),
+        ('Russia','Russia'),
 )
 STAKE_CATEGORY=(
-        ('pm','Precious Metals'),
-        ('Eg','Energy'),
-        ('Met','Metals'),
-        ('Eq','Equity'),
-        ('Cs','Cash'),
+        ('Precious Metals','Precious Metals'),
+        ('Energy','Energy'),
+        ('Metals','Metals'),
+        ('Equity','Equity'),
+        ('Cash','Cash'),
 )
 
 
@@ -28,8 +28,8 @@ class Instrument(models.Model):
     name=models.CharField(max_length=120)
     price=models.FloatField()
     quantity =models.PositiveIntegerField()
-    region=models.CharField(max_length=3, choices=REGION_CATEGORY)
-    stake=models.CharField(max_length=3, choices=STAKE_CATEGORY)
+    region=models.CharField(max_length=13, choices=REGION_CATEGORY)
+    sector=models.CharField(max_length=15, choices=STAKE_CATEGORY)
     created=models.DateTimeField(auto_now_add=True)
     
     total_price=models.FloatField(blank=True)

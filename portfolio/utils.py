@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from instrument.models import Instrument
 import seaborn as sns
 
+def prettify(number):
+    return '{:.2%}'.format(number)
 
 def get_graph():
     buffer=BytesIO()

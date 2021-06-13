@@ -2,48 +2,7 @@ from portfolio.views import prettify
 from django.shortcuts import render
 from django.views.generic import ListView
 from instrument.models import Instrument
-
 from django.contrib.auth import get_user_model
-
-# def InstrumentInvestments(request):
-#     qs=Instrument.objects.all()
-#     total=0
-#     all_users=len(get_user_model().objects.all())
-
-#     data=[]
-#     tickers=[]
-
-#     id=0
-#     for instance in qs:
-#         total += instance.total_price
-#         if instance.name in tickers:
-#             index=tickers.index(instance.name)
-#             data[index]['investment'] += instance.total_price
-#             data[index]['hodler'] += 1
-#             data[index]['hodler_per']=data[index]['hodler']/all_users
-
-
-
-#         else:
-#             package={}
-#             tickers.append(instance.name)
-#             id+=1
-#             package['id']=id
-#             package['ticker']=instance.name
-#             package['investment']=instance.total_price
-#             package['hodler']=1
-#             hodler_per=1/all_users
-#             round(hodler_per,2)
-#             package['hodler_per']=hodler_per
-
-#             data.append(package)
-
-#     context = {
-#         "data":data,
-#         "total":total,
-#         "all_users":all_users,
-#     }
-#     return render(request,"data/instrumentData.html",context)
 
 class InstrumentInvestments(ListView):
     model=Instrument
@@ -51,48 +10,50 @@ class InstrumentInvestments(ListView):
 
     def get_context_data(self):
         context={}
-        qs=Instrument.objects.all()
         total=0
-        id=0
         all_users=len(get_user_model().objects.all())
 
         data=[]
         tickers=[]
 
+        qs=Instrument.objects.all()
         for instance in qs:
             total += instance.total_price
+
         for instance in qs:
             if instance.name in tickers:
                 index=tickers.index(instance.name)
-                data[index]['investment'] += instance.total_price
-                data[index]['hodler'] += 1
+                data[index][0] += instance.total_price
+                data[index][1] += 1
 
-                hodler_per=data[index]['hodler']/all_users
+                hodler_per=data[index][1]/all_users
                 hodler_per=prettify(hodler_per)
-                data[index]['hodler_per']=hodler_per
+                data[index][2]=hodler_per
 
-                investment_per=data[index]['investment']/total
+                investment_per=data[index][0]/total
                 investment_per=prettify(investment_per)
-                data[index]['investment_per']=investment_per
+                data[index][3]=investment_per
 
             else:
-                package={}
+                package=[]
                 tickers.append(instance.name)
-                id+=1
-                package['id']=id
-                package['ticker']=instance.name
-                package['investment']=instance.total_price
-                package['hodler']=1
+                package.append(instance.total_price)
+                package.append(1)
 
                 hodler_per=1/all_users
                 hodler_per=prettify(hodler_per)
-                package['hodler_per']=hodler_per
+                package.append(hodler_per)
 
                 investment_per=instance.total_price/total
                 investment_per=prettify(investment_per)
-                package['investment_per']=investment_per
+                package.append(investment_per)
+
+                package.append(instance.name)
 
                 data.append(package)
+        print(data)
+
+        data.sort(reverse=True)
 
         context['data']=data
         context['total']=total
@@ -104,7 +65,6 @@ class InstrumentInvestments(ListView):
 def RegionInvestments(request):
     qs=Instrument.objects.all()
     total=0
-    id=0
     all_users=len(get_user_model().objects.all())
 
     data=[]
@@ -112,52 +72,54 @@ def RegionInvestments(request):
 
     for instance in qs:
         total += instance.total_price
-    
     for instance in qs:
         if instance.region in regions:
             index=regions.index(instance.region)
+            data[index][0] += instance.total_price
 
-            data[index]['investment'] += instance.total_price
-
-            investment_per=data[index]['investment']/total
+            investment_per=data[index][0]/total
             investment_per=prettify(investment_per)
-            data[index]['investment_per']=investment_per
+            data[index][3]=investment_per
 
-
-            if instance.profiles.username in data[index]['hodler']:
-                data[index]['hodler_num']= data[index]['hodler_num']
+            if instance.profiles.username in data[index][5]:
+                pass
             else:
-                data[index]['hodler_num'] += 1
-                data[index]['hodler'] += [instance.profiles.username]
+                data[index][1] += 1
+                data[index][5].append(instance.profiles.username)
 
-            hodler_per=data[index]['hodler_num']/all_users
+            hodler_per=data[index][1]/all_users
             hodler_per=prettify(hodler_per)
-            data[index]['hodler_per']=hodler_per
+            data[index][2]=hodler_per
 
         else:
-            package={}
+            package=[]
+            hodler=[]
             regions.append(instance.region)
-            id += 1
-            package['id']=id
-            package['region']=instance.region
-            package['hodler']=[instance.profiles.username]
-            package['hodler_num']=1
-            package['investment']=instance.total_price
+            package.append(instance.total_price)
+            package.append(1)
 
             hodler_per=1/all_users
-            hodler_per = prettify(hodler_per)
-            package['hodler_per']=hodler_per
+            hodler_per=prettify(hodler_per)
+            package.append(hodler_per)
 
             investment_per=instance.total_price/total
             investment_per=prettify(investment_per)
-            package['investment_per']=investment_per
-            
+            package.append(investment_per)
+
+            package.append(instance.region)
+
+            hodler.append(instance.profiles.username)
+            package.append(hodler)
+
+
             data.append(package)
 
+    data.sort(reverse=True)
+
     context = {
-        "data":data,
-        "total":total,
-        "all_users":all_users,
+    "data":data,
+    "total":total,
+    "all_users":all_users,
     }
     return render(request,"data/regionInvestment.html",context)
     
@@ -174,47 +136,49 @@ def SectorInvestments(request):
 
     for instance in qs:
         total += instance.total_price
-    
     for instance in qs:
-        if instance.stake in sectors:
-            index=sectors.index(instance.stake)
+        if instance.sector in sectors:
+            index=sectors.index(instance.sector)
+            data[index][0] += instance.total_price
 
-            data[index]['investment'] += instance.total_price
-
-            investment_per=data[index]['investment']/total
+            investment_per=data[index][0]/total
             investment_per=prettify(investment_per)
-            data[index]['investment_per']=investment_per
+            data[index][3]=investment_per
 
-
-            if instance.profiles.username in data[index]['hodler']:
-                data[index]['hodler_num']= data[index]['hodler_num']
+            if instance.profiles.username in data[index][5]:
+                pass
             else:
-                data[index]['hodler_num'] += 1
-                data[index]['hodler'] += [instance.profiles.username]
+                data[index][1] += 1
+                data[index][5].append(instance.profiles.username)
 
-            hodler_per=data[index]['hodler_num']/all_users
+            hodler_per=data[index][1]/all_users
             hodler_per=prettify(hodler_per)
-            data[index]['hodler_per']=hodler_per
+            data[index][2]=hodler_per
 
         else:
-            package={}
-            sectors.append(instance.stake)
-            id += 1
-            package['id']=id
-            package['sector']=instance.stake
-            package['hodler']=[instance.profiles.username]
-            package['hodler_num']=1
-            package['investment']=instance.total_price
+            package=[]
+            hodler=[]
+            sectors.append(instance.sector)
+            package.append(instance.total_price)
+            package.append(1)
 
             hodler_per=1/all_users
             hodler_per=prettify(hodler_per)
-            package['hodler_per']=hodler_per
+            package.append(hodler_per)
 
             investment_per=instance.total_price/total
             investment_per=prettify(investment_per)
-            package['investment_per']=investment_per
-            
+            package.append(investment_per)
+
+            package.append(instance.sector)
+
+            hodler.append(instance.profiles.username)
+            package.append(hodler)
+
+
             data.append(package)
+
+    data.sort(reverse=True)
 
     context = {
         "data":data,
