@@ -20,7 +20,6 @@ STAKE_CATEGORY=(
         ('Cash','Cash'),
 )
 
-
 User=get_user_model()
 
 class Instrument(models.Model):
@@ -48,7 +47,7 @@ class Instrument(models.Model):
 
 class Stock(models.Model):
     profiles=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-    ticker=models.CharField(max_length=10)
+    ticker=models.CharField(max_length=120)
 
     def __str__(self):
         return self.ticker

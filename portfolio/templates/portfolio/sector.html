@@ -31,8 +31,8 @@ Region
       <tbody>
         {%for instance in totals%}
             <tr>
-            <td><b>{{instance.0}}</b></td>
-            <td>{{instance.1|floatformat:"-2g"}}$</td>
+            <td><b>{{instance.1}}</b></td>
+            <td>{{instance.0|floatformat:"-2g"}}$</td>
             <td>{{instance.2}}</td>
             </tr>
         {%endfor%}

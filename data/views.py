@@ -50,8 +50,14 @@ class InstrumentInvestments(ListView):
 
                 package.append(instance.name)
 
+                x=instance.name.replace(" ","_")
+                x=x.replace("(","_")
+                x=x.replace(")","_")
+
+                package.append(x)
+
+                print(package)
                 data.append(package)
-        print(data)
 
         data.sort(reverse=True)
 

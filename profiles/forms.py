@@ -1,6 +1,4 @@
 from django import forms
-from django.forms import widgets
-from .models import Profile
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserChangeForm
 
@@ -60,7 +58,7 @@ class EditProfileForm(UserChangeForm):
     email=forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control mb-2'}))
     first_name=forms.CharField(max_length=120,widget=forms.TextInput(attrs={'class':'form-control mb-2'}))
     last_name=forms.CharField(max_length=120,widget=forms.TextInput(attrs={'class':'form-control mb-2'}))
-    username=forms.CharField(max_length=120,widget=forms.TextInput(attrs={'class':'form-controlmb mb-2'}))
+    username=forms.CharField(max_length=120,widget=forms.TextInput(attrs={'class':'form-control mb mb-2'}))
     
     class Meta:
         model=User

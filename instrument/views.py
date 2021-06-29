@@ -39,7 +39,6 @@ def add_view(request):
     }
     return render(request,"instrument/add.html",context)
 
-
 @login_required
 def quote(request):
     form=TickerForm(request.POST or None)
@@ -53,27 +52,6 @@ def quote(request):
         "form":form,
     }
     return render(request,'instrument/quote.html',context)
-
-
-# @login_required
-# def ticker(request,tid):
-#     form=TickerForm(request.POST or None)
-#     if request.method=="POST":
-#         if form.is_valid():
-#             try:
-#                 ticker=request.POST['ticker'].upper()
-#                 return redirect(ticker)
-#             except KeyError:
-#                 ticker="error"
-#                 return render(request,'instrument/watchlist.html',{'ticker_wl':ticker})
-#     else:
-#         form=TickerForm()
-#     context={"form":form}
-#     context['ticker']=tid
-#     context['meta']=get_meta_data(tid)
-#     context['price']=get_price_data(tid)
-#     # context['fund']=get_fundamentals_data(tid)
-#     return render(request,'instrument/ticker.html',context)
 
 @login_required
 def list(request):
@@ -144,8 +122,6 @@ def research(request):
 
 @login_required
 def watchlist(request):
-
-
     user=request.user
     form=TickerForm(request.POST or None)
     form_add=StockForm(request.POST or None)
@@ -174,6 +150,7 @@ def watchlist(request):
             except:
                 instance.delete()
                 api="Error"
+        print(output)
 
     context={
         "form":form,"form_add":form_add,"ticker":ticker,"output":output

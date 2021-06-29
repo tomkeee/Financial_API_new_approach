@@ -119,7 +119,7 @@ class CommentView(CreateView):
     model=Comment
     template_name="blogpage/add_comment.html"
     form_class=CommentForm
-    success_url="/"
+    success_url="/blog"
 
     def form_valid(self,form):
             form.instance.article_id=self.kwargs['pk']

@@ -1,17 +1,21 @@
 from django.shortcuts import render,redirect
-from instrument.models import Instrument
+from instrument.models import Instrument, Stock
 from instrument.forms import TickerForm,BarTypeForm
 from django.db.models import Sum, query,Count
 from django.http import HttpResponse
 from .utils import get_chart,prettify
 import pandas as pd
 
+from itertools import chain
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def portfolio_view(request):
+def portfolio_view(request):    
+    print(request)
+    print("XXXXX ",request.session.session_key)
+    print(f"SESSION for the user {request.user} {request.session} ")
+    print(f"COOKIES for the user {request.user} {request.COOKIES}")
     user=request.user
-    
     try:
         total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
     except:
@@ -77,6 +81,10 @@ def portfolio_view(request):
     
 @login_required
 def region_view(request):
+    print(f"SESSION for the user {request.user} {request.session} ")
+    print(f"COOKIES for the user {request.user} {request.COOKIES}")
+
+    list_view=list(chain(Instrument.objects.all(),Stock.objects.all()))
     user=request.user
     total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
     chart_type="#1"
@@ -116,8 +124,6 @@ def region_view(request):
             data_new.append(percentage)
             totals.append(data_new)
     totals.sort(reverse=True)
-
-    print(totals)
     
     sorted_dictionary=[]
     for instance in totals:
@@ -145,6 +151,9 @@ def region_view(request):
 
 @login_required
 def sector_view(request):
+    print(f"SESSION for the user {request.user} {request.session} ")
+    print(f"COOKIES for the user {request.user} {request.COOKIES}")
+
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -173,26 +182,27 @@ def sector_view(request):
     for instance in queryset:
         if instance.sector in sectors:
             index=sectors.index(instance.sector)
-            totals[index][1] += instance.total_price
-            percentage=totals[index][1]/total
+            totals[index][0] += instance.total_price
+            percentage=totals[index][0]/total
             percentage=prettify(percentage)
             totals[index][2]=percentage
         else:
             sectors.append(instance.sector)
             data_new=[]
-            data_new.append(instance.sector)
             data_new.append(instance.total_price)  
+            data_new.append(instance.sector)
             percentage=instance.total_price/total
             percentage=prettify(percentage)
             data_new.append(percentage)
             totals.append(data_new)
     totals.sort(reverse=True)
 
+
     sorted_dictionary=[]
     for instance in totals:
         data={}
-        data['sector']=instance[0]
-        data['invested']=instance[1]
+        data['invested']=instance[0]
+        data['sector']=instance[1]
         data['percentage']=instance[2]
         sorted_dictionary.append(data)
     if totals:

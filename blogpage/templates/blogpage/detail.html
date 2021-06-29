@@ -8,8 +8,8 @@
     {{object.body|safe}}
     <br/><br/><br/>
     <form action="{% url 'like-article' article.pk %}" method="POST">{%csrf_token%}
+        <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-primary btn-sm">Like</button> - {{total_like}} Likes
     </form>
-    <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-primary btn-sm">Like</button> - {{total_like}} Likes
     <br/><br/><br/>
     
     
@@ -26,6 +26,8 @@
 
 {% if not article.comments.all %}
     No comments Yet..
+    <br/>
+    <a href="{% url 'comment-article' article.pk %}"><button class="mt-5 btn btn-outline-secondary">Add comment</button></a>
 {%else%}
     <div class="justify-content-center col-7">
         {%for comment in article.comments.all%}

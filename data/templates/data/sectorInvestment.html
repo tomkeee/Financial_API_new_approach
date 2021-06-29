@@ -16,7 +16,7 @@
         <tbody>
             {%for instance in data%}
             <tr>
-            <td><b>{%if instance.4 == "pm"%} Precious Metals {%elif instance.4 == "Eg"%} Energy {%elif instance.4 == "Met"%} Metals {%elif instance.4 == "Eq"%} Equity {%elif instance.4 == "Cs"%} Cash {%endif%}</b></td>
+            <td><b>{{instance.4}}</b></td>
             <td>{{instance.0|floatformat:"-2g" }} $</td>
             <td>{{instance.2}}</td>
             <td>
@@ -30,12 +30,12 @@
                         <div class="modal-dialog modal-lg">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h1 class="display-3" style="margin-left: auto;" >{%if instance.4 == "pm"%} Precious Metals {%elif instance.4 == "Eg"%} Energy {%elif instance.4 == "Met"%} Metals {%elif instance.4 == "Eq"%} Equity {%elif instance.4 == "Cs"%} Cash {%endif%}</h1>
+                              <h1 class="display-3" style="margin-left: auto;" >{{instance.4}}</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <h1 class="display-6">Popularity</h1>
-                                    <p class="lead"> This asset is currently held by {% if instance.1 < 1.5 %} a single user <br/> {%else%} {{instance.1}} users <br/> {%endif%} which stands for {{instance.2}} of the entire community ({{all_users}} users)</p>
+                                    <p class="lead"> This sector is currently held by {% if instance.1 < 1.5 %} a single user <br/> {%else%} {{instance.1}} users <br/> {%endif%} which stands for {{instance.2}} of the entire community ({{all_users}} users)</p>
                                 <hr>
                                 <h1 class="display-6">Investments</h1>
                                     <p class="lead">{{instance.0|floatformat:"-2g" }}$ are invested which stands for {{instance.3}} </p>

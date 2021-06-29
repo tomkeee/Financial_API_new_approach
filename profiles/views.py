@@ -1,16 +1,13 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login,logout
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserChangeForm,PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import get_user_model
 from django.views import generic
-from .forms import EditProfileForm,ChangePasswordForm
+from .forms import EditProfileForm,ChangePasswordForm,RegisterForm
 
-
-from .forms import RegisterForm
-User = get_user_model()
-# Create your views here.
+User=get_user_model()
 
 def logout_view(request):
     logout(request)
@@ -19,20 +16,29 @@ def logout_view(request):
 def login_view(request):
     error_message=None
     form_b= AuthenticationForm()
+    print(form_b)
+    print(request.COOKIES)
+    print(request.session.session_key)
+
     if request.method=="POST":
-        form_b=AuthenticationForm(data=request.POST)
-        if form_b.is_valid():
-            username=form_b.cleaned_data.get("username")
-            password=form_b.cleaned_data.get('password')
-            user = authenticate(username=username,password=password)
-            if user is not None:
-                login(request,user)
-                if request.GET.get('next'):
-                    return redirect(request.GET.get('next'))
-                else:
-                    return redirect('/')
-        else:
-            error_message="Ups ... something went wrong"
+            form_b=AuthenticationForm(data=request.POST)
+            if form_b.is_valid():
+                username=form_b.cleaned_data.get("username")
+                password=form_b.cleaned_data.get('password')
+                user = authenticate(username=username,password=password)
+                print("Cleaned data ",form_b.cleaned_data)
+                print("The user: ",user)
+                if user is not None:
+                    login(request,user)
+                    if request.GET.get('next'):
+                        return redirect(request.GET.get('next'))
+                    else:
+                        return redirect('/')
+            else:
+                error_message="Ups ... something went wrong"
+        # else:
+            # return HttpResponse("Validation error has occured")
+        
     context={
         'form':form_b,
         'error_message':error_message,
@@ -69,3 +75,4 @@ class UserEditView(generic.UpdateView):
 class PasswordsChangeView(PasswordChangeView):
     form_class=ChangePasswordForm
     success_url=reverse_lazy('main')
+    
