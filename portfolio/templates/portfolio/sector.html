@@ -1,7 +1,7 @@
 {%extends "base.html"%}
 {%load crispy_forms_tags%}
 {%block title%}
-Region
+Sector
 {%endblock title%}
 {%block content%}
 <div class="container-fluid col-10 mb-5">
@@ -31,9 +31,9 @@ Region
       <tbody>
         {%for instance in totals%}
             <tr>
-            <td><b>{{instance.1}}</b></td>
-            <td>{{instance.0|floatformat:"-2g"}}$</td>
-            <td>{{instance.2}}</td>
+            <td><b>{{instance.sector}}</b></td>
+            <td>{{instance.invested|floatformat:"-2g"}}$</td>
+            <td>{{instance.percentage}}</td>
             </tr>
         {%endfor%}
       </tbody>

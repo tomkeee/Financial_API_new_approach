@@ -21,9 +21,9 @@ Region
       <tbody>
         {%for instance in totals%}
         <tr>
-          <td><b>{{instance.1}}</b></td>
-          <td>{{instance.0|floatformat:"-2g"}}$</td>
-          <td>{{instance.2}}</td>
+          <td><b>{{instance.region}}</b></td>
+          <td>{{instance.invested|floatformat:"-2g"}}$</td>
+          <td>{{instance.percentage}}</td>
         </tr>
         {%endfor%}
       </tbody>

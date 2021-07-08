@@ -21,9 +21,9 @@ Portfolio
           <tbody>
             {%for instance in totals%}
             <tr>
-              <td><b>{{instance.0}}</b></td>
-              <td>{{instance.1|floatformat:"-2g" }} $</td>
-              <td>{{instance.2}}</td>
+              <td><b>{{instance.name}}</b></td>
+              <td>{{instance.price|floatformat:"-2g" }} $</td>
+              <td>{{instance.percentage}}</td>
             </tr>
             {%endfor%}
           </tbody>

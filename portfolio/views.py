@@ -11,10 +11,6 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def portfolio_view(request):    
-    print(request)
-    print("XXXXX ",request.session.session_key)
-    print(f"SESSION for the user {request.user} {request.session} ")
-    print(f"COOKIES for the user {request.user} {request.COOKIES}")
     user=request.user
     try:
         total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
@@ -45,17 +41,17 @@ def portfolio_view(request):
 
     
     for element in queryset:
-        data=[]
+        data={}
 
         obj=element.name
-        data.append(obj)
+        data['name']=obj
 
         price=element.total_price
-        data.append(price)
+        data['price']=price
 
         percentage=price/total
         percentage=prettify(percentage)
-        data.append(percentage)
+        data['percentage']=percentage
 
         totals.append(data)
     
@@ -81,10 +77,6 @@ def portfolio_view(request):
     
 @login_required
 def region_view(request):
-    print(f"SESSION for the user {request.user} {request.session} ")
-    print(f"COOKIES for the user {request.user} {request.COOKIES}")
-
-    list_view=list(chain(Instrument.objects.all(),Stock.objects.all()))
     user=request.user
     total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
     chart_type="#1"
@@ -109,32 +101,24 @@ def region_view(request):
     for instance in queryset:
         if instance.region in regions:
             index=regions.index(instance.region)
-            totals[index][0] += instance.total_price
-            percentage=totals[index][0]/total
+            totals[index]['invested'] += instance.total_price
+            percentage=totals[index]['invested']/total
             percentage=prettify(percentage)
-            totals[index][2]=percentage
+            totals[index]['percentage']=percentage
         else:
             regions.append(instance.region)
 
-            data_new=[]
-            data_new.append(instance.total_price)  
-            data_new.append(instance.region)
+            data_new={}
+            data_new['invested']=instance.total_price
+            data_new['region']=instance.region
             percentage=instance.total_price/total
             percentage=prettify(percentage)
-            data_new.append(percentage)
+            data_new['percentage']=percentage
             totals.append(data_new)
-    totals.sort(reverse=True)
-    
-    sorted_dictionary=[]
-    for instance in totals:
-        data={}
-        data['invested']=instance[0]
-        data['region']=instance[1]
-        data['percentage']=instance[2]
-        sorted_dictionary.append(data)
+    totals.sort(key=lambda x: x['invested'], reverse=True)
 
     if totals:
-        df=pd.DataFrame(sorted_dictionary)
+        df=pd.DataFrame(totals)
         chart=get_chart(chart_type, df,labels=df['region'],y='invested',x='region')
     else:
         chart=""
@@ -151,9 +135,6 @@ def region_view(request):
 
 @login_required
 def sector_view(request):
-    print(f"SESSION for the user {request.user} {request.session} ")
-    print(f"COOKIES for the user {request.user} {request.COOKIES}")
-
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
     form=TickerForm(request.POST or None)
@@ -161,14 +142,12 @@ def sector_view(request):
         if form_b.is_valid():
                 if form_b.is_valid():
                     chart_type=request.POST.get('chart_type') 
-
         elif form.is_valid():
             ticker=request.POST['ticker']
             return redirect(ticker)
     else:
         form=TickerForm()
         form_b=BarTypeForm()
-    
     user=request.user
     try:
         total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
@@ -182,31 +161,23 @@ def sector_view(request):
     for instance in queryset:
         if instance.sector in sectors:
             index=sectors.index(instance.sector)
-            totals[index][0] += instance.total_price
-            percentage=totals[index][0]/total
+            totals[index]['invested'] += instance.total_price
+            percentage=totals[index]['invested']/total
             percentage=prettify(percentage)
-            totals[index][2]=percentage
+            totals[index]['percentage']=percentage
         else:
             sectors.append(instance.sector)
-            data_new=[]
-            data_new.append(instance.total_price)  
-            data_new.append(instance.sector)
+            data_new={}
+            data_new['invested']=instance.total_price
+            data_new['sector']=instance.sector
             percentage=instance.total_price/total
             percentage=prettify(percentage)
-            data_new.append(percentage)
+            data_new['percentage']=percentage
             totals.append(data_new)
-    totals.sort(reverse=True)
+    totals.sort(key=lambda x: x['sector'],reverse=True)
 
-
-    sorted_dictionary=[]
-    for instance in totals:
-        data={}
-        data['invested']=instance[0]
-        data['sector']=instance[1]
-        data['percentage']=instance[2]
-        sorted_dictionary.append(data)
     if totals:
-        df=pd.DataFrame(sorted_dictionary)
+        df=pd.DataFrame(totals)
         chart=get_chart(chart_type, df,labels=df['sector'],y='invested',x='sector')
     else:
         chart=""
