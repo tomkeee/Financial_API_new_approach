@@ -4,6 +4,9 @@
 .space{
   margin-top: 100px;
 }
+.bottom-space{
+    margin-bottom:200px;
+}
 .main{
   min-height: 100vh;
   display:flex;
@@ -11,4 +14,7 @@
 }
 footer{
   margin-top: auto;
+}
+.extra-space{
+    height: 200px;
 }
