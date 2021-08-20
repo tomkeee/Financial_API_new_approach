@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.http import Http404
-from django.http.response import HttpResponse
-from django.shortcuts import render,redirect
+from django.urls import reverse
+from django.http import Http404,HttpResponseRedirect
+from django.shortcuts import render,redirect,HttpResponseRedirect
 import requests
 from .forms import TickerForm,InstrumentForm,StockForm
-from django.http import HttpResponseRedirect
 from .models import Instrument,Stock
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView,DetailView,CreateView,UpdateView
@@ -20,11 +19,11 @@ def add_view(request):
     form=TickerForm(request.POST or None)
     if request.method=="POST":
         if form_add.is_valid():
-            data=InstrumentForm(request.POST or None)
+            data=InstrumentForm(request.POST)
             obj=data.save(commit=False)
             obj.profiles=request.user
             obj.save()
-            return HttpResponseRedirect('/add/')
+            return HttpResponseRedirect(reverse("add"))
             
         elif form.is_valid():
             ticker=request.POST['ticker']
@@ -54,7 +53,7 @@ def quote(request):
     return render(request,'instrument/quote.html',context)
 
 @login_required
-def list(request):
+def instrument_list(request):
     user=request.user
     queryset=Instrument.objects.filter(profiles=user).order_by('-total_price')
     context = {
@@ -64,7 +63,6 @@ def list(request):
 
 @login_required
 def update(request,pk):
-
     obj=Instrument.objects.get(id=pk)
     form_upd=InstrumentForm(instance=obj)
     form=TickerForm(request.POST or None)
@@ -94,7 +92,7 @@ def delete(request,pk):
     obj=Instrument.objects.get(id=pk)
     if request.method=="POST":
         obj.delete()
-        return redirect("/list/")
+        return HttpResponseRedirect(reverse("instrument_list"))
 
     context={'object':obj}
     return render(request,"instrument/delete.html",context)
@@ -105,14 +103,14 @@ def research(request):
     import json
 
     if request.method=="POST":
-        ticker_wl=request.POST['ticker_wl'].upper()
-        api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + ticker_wl + "/quote?token="+ API)
+        ticker_cl=request.POST['ticker_cl'].upper()
+        api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + ticker_cl + "/quote?token="+ API)
         try:
             api=json.loads(api_request.content)
         except:
             api="Error"
         context={
-            "ticker_wl":ticker_wl,
+            "ticker_cl":ticker_cl,
             "api":api
         }
         return render(request,'instrument/research.html',context)
@@ -127,12 +125,12 @@ def watchlist(request):
     form_add=StockForm(request.POST or None)
     if request.method=="POST":
         if form_add.is_valid():
-            data=StockForm(request.POST or None)
+            data=StockForm(request.POST)
             obj=data.save(commit=False)
             obj.profiles=request.user
             obj.save()
-            messages.success(request,("Stock has been added!"))
-            return redirect('/watchlist/')
+            messages.success(request,("Stock has been added! "))
+            return HttpResponseRedirect(reverse("watchlist"))
         elif form.is_valid():
             ticker=request.POST['ticker']
             return redirect(ticker)
@@ -150,16 +148,13 @@ def watchlist(request):
             except:
                 instance.delete()
                 api="Error"
-        print(output)
-
     context={
         "form":form,"form_add":form_add,"ticker":ticker,"output":output
         }
-
     return render(request,'instrument/watchlist.html',context)
 
 def unfollow(request,pk):
     obj=Stock.objects.get(id=pk)
     obj.delete()
-    messages.success(request,("Stock has been unfollowed"))
-    return redirect("/watchlist/")
+    messages.success(request,("Stock has been unfollowed "))
+    return HttpResponseRedirect(reverse("watchlist"))

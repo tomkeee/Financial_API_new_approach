@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from instrument.views import quote,add_view,list,update,delete, research, watchlist,unfollow
-from portfolio.views import portfolio_view,region_view,sector_view
+from portfolio.views import portfolio_view,region_view,sector_view,calculator
 from profiles.views import login_view,logout_view,register_view
 from django.contrib.auth import views as auth_views
 
@@ -26,6 +25,8 @@ from profiles.views import login_view,logout_view,UserEditView,PasswordsChangeVi
 
 urlpatterns = [
     path("blog/",include('blogpage.urls')),
+    path('investment/',include('data.urls')),
+    path("instrument/",include("instrument.urls")),
 
     path('admin/', admin.site.urls),
     path('register/',register_view),
@@ -34,22 +35,11 @@ urlpatterns = [
     path('edit/',UserEditView.as_view(),name="edit"),
     path('password/',PasswordsChangeView.as_view(template_name='registration/changePassword.html')),
 
-    path('quote/',quote),
-    # path('quote/<str:tid>/',ticker, name='ticker'),
-    path('research/',research),
-    path('watchlist/',watchlist,name="watchlist"),
-    path('unfollow/<int:pk>/',unfollow, name="unfollow"),
-
+    path('calculator/',calculator,name="calculator"),
     path('',portfolio_view,name='portfolio'),
     path('region/',region_view,name="region"),
     path('sector/',sector_view,name="sector"),
-    path('calculator/',include('portfolio.urls')),
-    path('investment/',include('data.urls')),
-
-    path('add/',add_view,name="add"),
-    path('list/',list,name='list'),
-    path('update/<int:pk>/',update, name="update"),
-    path('delete/<int:pk>/',delete, name="delete")
+    
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

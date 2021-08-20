@@ -5,20 +5,19 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import get_user_model
 from django.views import generic
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from .forms import EditProfileForm,ChangePasswordForm,RegisterForm
 
 User=get_user_model()
 
 def logout_view(request):
     logout(request)
-    return redirect('/login')
+    return HttpResponseRedirect(reverse("login"))
 
 def login_view(request):
     error_message=None
     form_b= AuthenticationForm()
-    print(form_b)
-    print(request.COOKIES)
-    print(request.session.session_key)
 
     if request.method=="POST":
             form_b=AuthenticationForm(data=request.POST)
@@ -26,8 +25,6 @@ def login_view(request):
                 username=form_b.cleaned_data.get("username")
                 password=form_b.cleaned_data.get('password')
                 user = authenticate(username=username,password=password)
-                print("Cleaned data ",form_b.cleaned_data)
-                print("The user: ",user)
                 if user is not None:
                     login(request,user)
                     if request.GET.get('next'):
@@ -36,8 +33,6 @@ def login_view(request):
                         return redirect('/')
             else:
                 error_message="Ups ... something went wrong"
-        # else:
-            # return HttpResponse("Validation error has occured")
         
     context={
         'form':form_b,

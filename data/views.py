@@ -1,3 +1,4 @@
+from django.http import request
 from portfolio.views import prettify
 from django.shortcuts import render
 from django.views.generic import ListView
@@ -6,11 +7,28 @@ from django.contrib.auth import get_user_model
 
 from django.db.models import Sum
 
+from .serializers import InstrumentSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+
+def get_current_users():
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    list_of_id = []
+    for session in active_sessions:
+        data = session.get_decoded()
+        list_of_id.append(data.get('_auth_user_id', None))
+    return User.objects.filter(id__in=list_of_id)
+
 class InstrumentInvestments(ListView):
     model=Instrument
     template_name="data/instrumentData.html"
 
     def get_context_data(self,**kwargs):
+
         context=super().get_context_data(**kwargs)
         total=0
         all_users=len(get_user_model().objects.all())
@@ -114,7 +132,6 @@ def RegionInvestments(request):
             package['region']=instance.region
             region_id=instance.region.replace(" ","_")
             package['region_for_id']=region_id
-            print(region_id)
 
             hodler.append(instance.profiles.username)
             package['hodlers']=hodler
@@ -184,7 +201,6 @@ def SectorInvestments(request):
 
 
             data.append(package)
-    print(data)
     data.sort(key=lambda x:x['invested'],reverse=True)
 
     context = {
@@ -193,3 +209,24 @@ def SectorInvestments(request):
         "all_users":all_users,
     }
     return render(request,"data/sectorInvestment.html",context)
+
+def ClientsData(request):
+    active_users=get_current_users()
+    context={
+        "active_users":len(active_users)
+    }
+
+    return render(request,"data/usersData.html",context)
+
+@api_view(['GET'])
+def InstrumentsAPI(request):
+    instruments=Instrument.objects.all()
+    serializer=InstrumentSerializer(instruments,many=True) 
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def InstrumentAPI(request,pk):
+    instrument=Instrument.objects.get(id=pk)
+    serializer=InstrumentSerializer(instrument,many=False)
+    return Response(serializer.data)
+

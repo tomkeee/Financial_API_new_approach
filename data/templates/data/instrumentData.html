@@ -38,7 +38,7 @@
                                     <p class="lead"> This asset is currently held by {% if instance.hodlers < 2 %} a single user <br/> {%else%} {{instance.hodlers}} users <br/> {%endif%} which stands for {{instance.holders_per}} of the entire community ({{all_users}} users)</p>
                                 <hr>
                                 <h1 class="display-6">Investments</h1>
-                                    <p class="lead">{{instance.invested|floatformat:"-2g" }} $ are invested which stands for {{instance.investment_per}} </p>
+                                    <p class="lead">{{instance.invested|floatformat:"-2g" }} $ are invested which stands for {{instance.investment_per}} money invested on platform</p>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

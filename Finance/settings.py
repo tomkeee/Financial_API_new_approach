@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'blogpage',
     'data',
     #third app
+    'rest_framework',
     'crispy_forms',
     'ckeditor',
     'bootstrap5',
@@ -69,6 +70,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Finance.wsgi.application'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 # Database
@@ -82,7 +84,7 @@ DATABASES = {
         'USER': USER,
         'PASSWORD': PASSWORD,
         'HOST': 'localhost',
-        'PORT': '3000',
+        'PORT': '2345',
     }
 }
 

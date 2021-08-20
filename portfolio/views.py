@@ -10,15 +10,12 @@ from itertools import chain
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def portfolio_view(request):    
+def portfolio_view(request):  
     user=request.user
     try:
         total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
     except:
         total=0
-
-    # would work using annotate 
-    # total=float(list(Instrument.objects.filter(profiles=user).aggregate(totalz=Sum('total_price')).values())[0] or 0)
 
     chart_type="#1"
     form_b=BarTypeForm(request.POST or None)
@@ -174,7 +171,7 @@ def sector_view(request):
             percentage=prettify(percentage)
             data_new['percentage']=percentage
             totals.append(data_new)
-    totals.sort(key=lambda x: x['sector'],reverse=True)
+    totals.sort(key=lambda x: x['invested'],reverse=True)
 
     if totals:
         df=pd.DataFrame(totals)
