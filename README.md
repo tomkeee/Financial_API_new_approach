@@ -1,5 +1,9 @@
 Financial App which shows you how well your portfolio is diversified, depending on Region,Sector and other entities.
 
+------------ Docker ------------
+
+docker run -p 8000:8000 66122001/financialapp in order to run docker container on local port 8000 (e.g. localhost:8000) 
+
 ------------ API ------------
 
 In order to see the most important pa about a stock or ETF type its ticker at the top right corner
