@@ -2,14 +2,12 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import Http404,HttpResponseRedirect
 from django.shortcuts import render,redirect,HttpResponseRedirect
-import requests
 from .forms import TickerForm,InstrumentForm,StockForm
 from .models import Instrument,Stock
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView,DetailView,CreateView,UpdateView
 
-import requests
-import json
+import requests,threading,json
 from .api import API
 
 
@@ -70,7 +68,7 @@ def update(request,pk):
         form_upd=InstrumentForm(request.POST,instance=obj)
         if form_upd.is_valid():
             form_upd.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse("instrument_list"))
             
         elif form.is_valid():
             ticker=request.POST['ticker']
@@ -135,21 +133,38 @@ def watchlist(request):
             ticker=request.POST['ticker']
             return redirect(ticker)
     else:
-        ticker=Stock.objects.filter(profiles=user)
+        stock_qs=Stock.objects.filter(profiles=user)
+        tickers=[]
+        threads=[]
         output=[]
-        for instance in ticker:
+
+        for i in stock_qs:
+            tickers.append(i)
+
+        def get_data(ticker):
             data=[]
-            api_request=requests.get("https://cloud.iexapis.com/stable/stock/" + str(instance) + "/quote?token="+API)
+            api_request=requests.get(("https://cloud.iexapis.com/stable/stock/" + ticker + "/quote?token=pk_4d146da815d147cdbdd02ff2f0badcbc"))
+            api=json.loads(api_request.content)
+            data.append(i.id)
+            data.append(api)
+            output.append(data)
+            return api
+
+        for i in tickers:
             try:
-                api=json.loads(api_request.content)
-                data.append(instance.id)
-                data.append(api)
-                output.append(data)
-            except:
-                instance.delete()
-                api="Error"
+                x=threading.Thread(target=get_data,args=(i.ticker,))
+                x.start()
+                threads.append(x)
+            except Exception as e:
+                i.delete()
+
+
+        for thread in threads:
+            thread.join()
+
+
     context={
-        "form":form,"form_add":form_add,"ticker":ticker,"output":output
+        "form":form,"form_add":form_add,"output":output
         }
     return render(request,'instrument/watchlist.html',context)
 

@@ -6,15 +6,40 @@ from django.http import HttpResponse
 from .utils import get_chart,prettify
 import pandas as pd
 
-from itertools import chain
+import requests
+from multiprocessing import Process
 from django.contrib.auth.decorators import login_required
 
 @login_required
 def portfolio_view(request):  
     user=request.user
+    thread=[]
     try:
+        # getting data in USD
         total=Instrument.objects.filter(profiles=user).aggregate(sum=Sum('total_price'))['sum']
-    except:
+
+        # getting data in PLN
+        url = "https://currency-exchange.p.rapidapi.com/exchange"
+        querystring_up = {"to":"PLN","from":"USD","q":"1.0"}
+
+        headers = {
+            'x-rapidapi-key': "0e94fa3e43msh9c5023219d374e8p1e2723jsnab5c586bdfd9",
+            'x-rapidapi-host': "currency-exchange.p.rapidapi.com"
+            }
+        
+        def get_data():
+            u_p = requests.request("GET", url, headers=headers, params=querystring_up).json()
+            return u_p
+
+        total_usd_pln=get_data()
+        x=Process(target=get_data)
+        x.start()
+        x.join()
+
+        
+    except Exception as e:
+        print(e)
+
         total=0
 
     chart_type="#1"
@@ -51,7 +76,8 @@ def portfolio_view(request):
         data['percentage']=percentage
 
         totals.append(data)
-    
+
+    print(total_usd_pln * total)
     context={
         "queryset":queryset,
         "total":total,
@@ -178,7 +204,7 @@ def sector_view(request):
         chart=get_chart(chart_type, df,labels=df['sector'],y='invested',x='sector')
     else:
         chart=""
-
+        
     context={
         "total":total,
         "totals":totals,

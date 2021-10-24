@@ -34,9 +34,8 @@ INSTALLED_APPS = [
     'data',
     #third app
     'rest_framework',
-    'crispy_forms',
     'ckeditor',
-    'bootstrap5',
+    'crispy_forms'
 
 ]
 CRISPY_TEMPLATE_PACK='bootstrap4'
