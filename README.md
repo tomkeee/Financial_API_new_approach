@@ -2,11 +2,11 @@ Financial App which shows you how well your portfolio is diversified, depending 
 
 ------------ Docker ------------
 
-docker run -p 8000:8000 66122001/financialapp in order to run docker container on local port 8000 (e.g. localhost:8000) 
+docker run -p 8000:8000 66122001/financialapp in order to run docker container on local port 8000 
 
 ------------ API ------------
 
-In order to see the most important pa about a stock or ETF type its ticker at the top right corner
+In order to see the most important data about a stock or ETF type its ticker at the top right corner
 
 <img width="1440" alt="Screen Shot 2021-08-16 at 16 03 33" src="https://user-images.githubusercontent.com/80860556/130247114-ffd42330-0c99-46b0-a168-740b7f18bf61.png">
 
